@@ -42,7 +42,7 @@ class _BibliotecaState extends State<Biblioteca> {
     return Scaffold(
       backgroundColor: Colors.deepPurple[800],
       appBar: AppBar(
-        automaticallyImplyLeading: false,  // Remove a seta de voltar
+        automaticallyImplyLeading: false, 
         backgroundColor: const Color.fromARGB(255, 74, 30, 80),
         toolbarHeight: 90.0,
         elevation: 50,
@@ -83,14 +83,12 @@ class _BibliotecaState extends State<Biblioteca> {
         ),
       ),
       body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 64, 29, 69),
-              Color.fromARGB(255, 134, 39, 54),
-            ],
+          image: DecorationImage(
+            image: AssetImage('assets/fundoPrimeiro.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Padding(

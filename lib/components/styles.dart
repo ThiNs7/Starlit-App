@@ -31,11 +31,11 @@ TextStyle txtNunitoGreen(double tamanho){
     );
 }
 
-TextStyle txtInter(double tamanho){
-    return GoogleFonts.ptSansNarrow(
+TextStyle txtSans(double tamanho, color){
+    return GoogleFonts.ptSans(
       fontSize: tamanho,
       fontWeight: FontWeight.w700,
-      color: Color.fromARGB(255, 255, 255, 255)
+      color: color
     );
   }
 
@@ -47,4 +47,6 @@ TextStyle txtSansation(double tamanho) {
     color: Colors.white, 
   );
 }
+
+
 

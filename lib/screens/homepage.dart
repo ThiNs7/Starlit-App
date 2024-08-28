@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.chat, color: Colors.white),
             label: '',
+            
           ),
         ],
         selectedIconTheme: const IconThemeData(size: 60),
