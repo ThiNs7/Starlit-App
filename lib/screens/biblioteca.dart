@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:starlitfilms/components/review_form.dart';
 
-class Review {
-  final String title;
-  final String description;
-  final String imagePath;
-  final int rating;
-
-  Review({
-    required this.title,
-    required this.description,
-    required this.imagePath,
-    required this.rating,
-  });
-}
 
 class Biblioteca extends StatefulWidget {
   const Biblioteca({Key? key}) : super(key: key);
@@ -24,17 +12,19 @@ class Biblioteca extends StatefulWidget {
 class _BibliotecaState extends State<Biblioteca> {
   List<Review> userReviews = [];
 
-  void addReview() {
-    setState(() {
-      userReviews.add(
-        Review(
-          title: 'Novo Filme',
-          description: 'Descrição do novo filme...',
-          imagePath: 'assets/new_movie.jpg',
-          rating: 4,
-        ),
-      );
-    });
+  void _showReviewForm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ReviewForm(
+          onSubmit: (review) {
+            setState(() {
+              userReviews.add(review);
+            });
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -42,8 +32,8 @@ class _BibliotecaState extends State<Biblioteca> {
     return Scaffold(
       backgroundColor: Colors.deepPurple[800],
       appBar: AppBar(
-        automaticallyImplyLeading: false, 
-        backgroundColor: const Color.fromARGB(255, 74, 30, 80),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 61, 25, 66),
         toolbarHeight: 90.0,
         elevation: 50,
         shadowColor: const Color(0xFF0000),
@@ -51,9 +41,21 @@ class _BibliotecaState extends State<Biblioteca> {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: Image.asset(
-                'assets/logoSmall.png', 
-                height: 50.0, 
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.20),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/logoSmall.png',
+                  height: 50.0,
+                ),
               ),
             ),
             Expanded(
@@ -62,10 +64,18 @@ class _BibliotecaState extends State<Biblioteca> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.search, color: Colors.deepPurple),
+                child: const Row(
+                  children: [
+                    Icon(Icons.search, color: Colors.deepPurple, size: 45),
                     SizedBox(width: 8),
                     Expanded(
                       child: TextField(
@@ -87,20 +97,15 @@ class _BibliotecaState extends State<Biblioteca> {
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/fundoPrimeiro.png'),
-            fit: BoxFit.cover,
+            image: AssetImage('assets/homeFundo.png'),
+            fit
+                        : BoxFit.cover,
           ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: addReview,
-                child: const Text('Adicionar Review'),
-              ),
-              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   itemCount: userReviews.length,
@@ -113,26 +118,34 @@ class _BibliotecaState extends State<Biblioteca> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showReviewForm,
+        backgroundColor: const Color.fromARGB(255, 61, 25, 66),
+        child: const Icon(Icons.add, size: 40, color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(35),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0XFFB43649),
+        backgroundColor: Color.fromARGB(255, 143, 44, 59),
         showSelectedLabels: false,
         showUnselectedLabels: false,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 45, color: Colors.white),
+            icon: Icon(Icons.home, size: 30, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu, size: 45, color: Colors.white),
+            icon: Icon(Icons.menu, size: 30, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 45, color: Colors.white),
+            icon: Icon(Icons.person, size: 30, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat, size: 45, color: Colors.white),
+            icon: Icon(Icons.chat, size: 30, color: Colors.white),
             label: '',
           ),
         ],
@@ -198,3 +211,4 @@ class _BibliotecaState extends State<Biblioteca> {
     );
   }
 }
+

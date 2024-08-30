@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
+import 'package:starlitfilms/screens/biblioteca.dart';
 import 'package:starlitfilms/screens/entrar.dart';
 import 'package:starlitfilms/screens/homepage.dart';
 
@@ -22,10 +23,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        initialRoute: '/biblioteca',
         routes: {
           '/home' : (context) => HomePage(),
-          '/': (context) => Entrar()
+          '/': (context) => Entrar(),
+          '/biblioteca' : (context) => Biblioteca(),
         },
       ),
     );
