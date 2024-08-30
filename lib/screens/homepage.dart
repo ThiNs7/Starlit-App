@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:starlitfilms/components/slide.dart';
+import 'package:starlitfilms/screens/biblioteca.dart';
+import 'package:starlitfilms/screens/home.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,22 +11,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
+
+  List<Widget> pages = [
+    const Home(),
+    const Biblioteca(),
+    const Text('Perfil'),
+    const Text('Chat')
+  ];
+
+  nextPage(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 74, 30, 80),
-        toolbarHeight: 98.0,
-        elevation: 10,
+        backgroundColor: const Color.fromARGB(255, 61, 25, 66),
+        toolbarHeight: 90.0,
+        elevation: 50,
         shadowColor: const Color(0xFF0000),
         title: Row(
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: Image.asset(
-                'assets/logoSmall.png',
-                height: 66.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.20),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/logoSmall.png',
+                  height: 50.0,
+                ),
               ),
             ),
             Expanded(
@@ -61,51 +90,31 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 64, 29, 69),
-              Color.fromARGB(255, 134, 39, 54),
-            ],
-          ),
-        ),
-        child: const Column(
-          children: [
-            Slide(),
-            
-          ],
-        ),
-      ),
+      body: pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0XFFB43649),
+        backgroundColor: const Color.fromARGB(255, 143, 44, 59),
+        onTap: nextPage,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        currentIndex: selectedIndex,
         iconSize: 80,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home, size: 30, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu, color: Colors.white),
-            label: '',
-
-            
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
+            icon: Icon(Icons.menu, size: 30, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
+            icon: Icon(Icons.person, size: 30, color: Colors.white),
             label: '',
-            
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat, size: 30, color: Colors.white),
+            label: '',
           ),
         ],
         selectedIconTheme: const IconThemeData(size: 60),

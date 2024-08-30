@@ -32,18 +32,36 @@ class _ReviewFormState extends State<ReviewForm> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Adicionar Review'),
+      backgroundColor: Colors.black.withOpacity(0.6),
+      title: const Text('Adicionar Review', style: TextStyle(color: Colors.white)),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Título do Filme'),
+              decoration: const InputDecoration(
+                labelText: 'Título do Filme',
+                labelStyle: TextStyle(color: Colors.white),
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromARGB(255, 121, 42, 84)),
+                ),
+              ),
+              style: const TextStyle(color: Colors.white),
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Descrição'),
+              decoration: const InputDecoration(
+                labelText: 'Descrição',
+                labelStyle: TextStyle(color: Colors.white),
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromARGB(255, 121, 42, 84)),
+                ),
+              ),
+              style: const TextStyle(color: Colors.white),
               maxLines: 3,
             ),
             const SizedBox(height: 10),
@@ -57,7 +75,7 @@ class _ReviewFormState extends State<ReviewForm> {
               itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               itemBuilder: (context, _) => const Icon(
                 Icons.star,
-                color: Colors.amber,
+                color: Colors.redAccent,
               ),
               onRatingUpdate: (rating) {
                 setState(() {
@@ -73,7 +91,7 @@ class _ReviewFormState extends State<ReviewForm> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancelar'),
+          child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
         ),
         ElevatedButton(
           onPressed: () {
@@ -90,6 +108,9 @@ class _ReviewFormState extends State<ReviewForm> {
               Navigator.of(context).pop();
             }
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 121, 42, 84), 
+          ),
           child: const Text('Salvar'),
         ),
       ],

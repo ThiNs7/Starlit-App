@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:starlitfilms/components/splashScreen/splash_screen.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/biblioteca.dart';
-import 'package:starlitfilms/screens/entrar.dart';
 import 'package:starlitfilms/screens/homepage.dart';
 
 
@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/biblioteca',
+        initialRoute: '/',
         routes: {
-          '/home' : (context) => HomePage(),
-          '/': (context) => Entrar(),
-          '/biblioteca' : (context) => Biblioteca(),
+          '/': (context) => const HomePage(),
+          'biblioteca': (context) => const Biblioteca(),
+          '/home' : (context) => const HomePage(),
         },
       ),
     );

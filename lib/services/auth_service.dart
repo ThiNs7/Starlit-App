@@ -19,7 +19,7 @@ class AuthService  {
 
     print('Status Code: ${response.statusCode}');
     if(response.statusCode != 201){
-      throw Exception(' BETO CARREIRO Failed to register ${response.body}');
+      throw Exception('Failed to register ${response.body}');
     }
   }
 

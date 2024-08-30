@@ -12,7 +12,7 @@ class Cadastro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           SizedBox.expand(
@@ -25,21 +25,21 @@ class Cadastro extends StatelessWidget {
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Image.asset(
-                  'assets/logoCompleta.png',
-                  width: 400,
-                  height: 300,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/logoCompleta.png',
+                      width: 400,
+                      height: 300,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: Container(
+                Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.5,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
@@ -49,7 +49,7 @@ class Cadastro extends StatelessWidget {
                     ),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
                         'REGISTRAR',
@@ -59,20 +59,15 @@ class Cadastro extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                        child: Column(
-                          children: [
-                            _buildTextField(_nameController, 'Nome'),
-                            const SizedBox(height: 16),
-                            _buildTextField(_emailController, 'Email'),
-                            const SizedBox(height: 16),
-                            _buildTextField(_passwordController, 'Senha', isPassword: true),
-                            const SizedBox(height: 16),
-                            _buildTextField(_passwordConfirmController, 'Confirmar senha', isPassword: true),
-                          ],
-                        ),
-                      ),
+                      const SizedBox(height: 20),
+                      _buildTextField(_nameController, 'Nome'),
+                      const SizedBox(height: 16),
+                      _buildTextField(_emailController, 'Email'),
+                      const SizedBox(height: 16),
+                      _buildTextField(_passwordController, 'Senha', isPassword: true),
+                      const SizedBox(height: 16),
+                      _buildTextField(_passwordConfirmController, 'Confirmar senha', isPassword: true),
+                      const SizedBox(height: 20),
                       SizedBox(
                         width: 300,
                         height: 60,
@@ -135,8 +130,8 @@ class Cadastro extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

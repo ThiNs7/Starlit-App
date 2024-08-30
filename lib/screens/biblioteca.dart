@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:starlitfilms/components/review_form.dart';
 
-
 class Biblioteca extends StatefulWidget {
   const Biblioteca({Key? key}) : super(key: key);
 
@@ -31,75 +30,13 @@ class _BibliotecaState extends State<Biblioteca> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple[800],
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(255, 61, 25, 66),
-        toolbarHeight: 90.0,
-        elevation: 50,
-        shadowColor: const Color(0xFF0000),
-        title: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.20),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  'assets/logoSmall.png',
-                  height: 50.0,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.search, color: Colors.deepPurple, size: 45),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'type to search',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/homeFundo.png'),
-            fit
-                        : BoxFit.cover,
+            fit: BoxFit.cover,
           ),
         ),
         child: Padding(
@@ -125,30 +62,6 @@ class _BibliotecaState extends State<Biblioteca> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(35),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Color.fromARGB(255, 143, 44, 59),
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30, color: Colors.white),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu, size: 30, color: Colors.white),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 30, color: Colors.white),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, size: 30, color: Colors.white),
-            label: '',
-          ),
-        ],
       ),
     );
   }
@@ -211,4 +124,3 @@ class _BibliotecaState extends State<Biblioteca> {
     );
   }
 }
-
