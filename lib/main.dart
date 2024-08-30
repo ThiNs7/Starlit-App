@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:starlitfilms/components/splash_screen.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/entrar.dart';
 import 'package:starlitfilms/screens/homepage.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/home' : (context) => HomePage(),
-          '/': (context) => Entrar()
+          '/': (context) => const SplashScreenIntro()
         },
       ),
     );

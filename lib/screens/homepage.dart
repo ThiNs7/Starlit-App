@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:starlitfilms/components/slide.dart';
+import 'package:starlitfilms/components/splash_screen.dart';
+import 'package:starlitfilms/screens/biblioteca.dart';
+import 'package:starlitfilms/screens/home.dart';
+import 'package:http/http.dart' as http;
+
+
+
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  List pageList = [
+    const Home(),
+    const Biblioteca(),
+  ];
+
+  int pageIndex = 0;
+
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,48 +76,38 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 64, 29, 69),
-              Color.fromARGB(255, 134, 39, 54),
-            ],
-          ),
-        ),
-        child: const Column(
-          children: [
-            Slide(),
-            
-          ],
-        ),
-      ),
+     
+      
+      body: pageList[pageIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0XFFB43649),
+        onTap: (e) {
+          setState(() {
+            pageIndex = e;
+          });
+        },
         showSelectedLabels: false,
         showUnselectedLabels: false,
         iconSize: 80,
+        currentIndex: pageIndex,
         items: const [
-          BottomNavigationBarItem(
+          
+           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu, color: Colors.white),
             label: '',
-
+             
             
           ),
-          BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),
             label: '',
           ),
-          BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.chat, color: Colors.white),
             label: '',
           ),
