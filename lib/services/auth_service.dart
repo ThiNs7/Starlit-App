@@ -6,19 +6,20 @@ class AuthService  {
 
   bool get isAuthenticated => _token != null;
 
-  final String baseUrl = "https://def5f95f-e30e-4f86-b1e0-9f53460f5248-00-1pjmbawk5ifrf.worf.replit.dev";
+  final String baseUrl = "https://3d9dba1f-2b5b-433f-a1b0-eb428d2de251-00-32rrmhyucky1c.worf.replit.dev";
 
   Future<void> register(String nome, String email, String password) async {
-    final url = Uri.parse("$baseUrl/register");
+    final uri = Uri.parse('$baseUrl/user/register');
 
     final response = await http.post(
-      url,
+      uri,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'name': nome, 'email': email, 'password': password}),
     );
 
+    print('Status Code: ${response.statusCode}');
     if(response.statusCode != 201){
-      throw Exception('Failed to register ${response.body}');
+      throw Exception(' BETO CARREIRO Failed to register ${response.body}');
     }
   }
 
