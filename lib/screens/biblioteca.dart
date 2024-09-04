@@ -29,6 +29,16 @@ class _BibliotecaState extends State<Biblioteca> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 61, 25, 66),
+        leading: IconButton(
+          icon: const Icon(Icons.home, size: 30, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Text("Biblioteca"),
+      ),
       backgroundColor: Colors.deepPurple[800],
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -71,7 +81,7 @@ class _BibliotecaState extends State<Biblioteca> {
       margin: const EdgeInsets.only(bottom: 20.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.deepPurple[700],
+        color: Colors.black.withOpacity(0.6),
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Column(
@@ -98,6 +108,17 @@ class _BibliotecaState extends State<Biblioteca> {
                   ),
                 ),
               ),
+              IconButton(
+                icon: Icon(
+                  review.isPublic ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    review.isPublic = !review.isPublic;
+                  });
+                },
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -110,8 +131,6 @@ class _BibliotecaState extends State<Biblioteca> {
           const SizedBox(height: 10),
           Row(
             children: [
-              const Icon(Icons.visibility, color: Colors.white),
-              const SizedBox(width: 10),
               CircleAvatar(backgroundImage: AssetImage(review.imagePath)),
               const SizedBox(width: 10),
               CircleAvatar(backgroundImage: AssetImage(review.imagePath)),

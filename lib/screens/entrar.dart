@@ -52,11 +52,12 @@ class Entrar extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 20),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 0.7,
+                            height: 60,
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
@@ -75,20 +76,19 @@ class Entrar extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 "LOGIN",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 121, 42, 84),
-                                  fontSize: 20,
-                                ),
+                                style: txtSans(20, const Color.fromARGB(255, 121, 42, 84)),
                               ),
                             ),
                           ),
                         ),
+                        const SizedBox(height: 15),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 0.7,
+                            height: 60,
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:starlitfilms/components/styles.dart';
 
 class Review {
   final String title;
   final String description;
-  final String imagePath;
   final int rating;
+  final String imagePath;
+  bool isPublic; 
 
   Review({
     required this.title,
     required this.description,
-    required this.imagePath,
     required this.rating,
+    required this.imagePath,
+    this.isPublic = true, 
   });
 }
 
@@ -111,7 +114,10 @@ class _ReviewFormState extends State<ReviewForm> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 121, 42, 84), 
           ),
-          child: const Text('Salvar'),
+          child: Text(
+                  "Salvar",
+                   style: txtSans(16, Colors.white),
+           ),
         ),
       ],
     );

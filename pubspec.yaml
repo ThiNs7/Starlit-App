@@ -35,11 +35,13 @@ dependencies:
   http: ^1.2.2
   provider: ^6.1.2
   another_flutter_splash_screen: ^1.2.1
+  file_picker: ^5.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   google_fonts: ^6.2.1
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
