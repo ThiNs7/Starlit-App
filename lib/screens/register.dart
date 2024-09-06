@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
+import 'package:starlitfilms/screens/Perfil/perfil.dart';
+
 
 class Cadastro extends StatelessWidget {
   Cadastro({super.key});
@@ -8,6 +10,7 @@ class Cadastro extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
   final _nameController = TextEditingController();
+  final _avatarController = TextEditingController(); 
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class Cadastro extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 40), 
+                const SizedBox(height: 40),
                 Center(
                   child: Image.asset(
                     'assets/logoCompleta.png',
@@ -69,6 +72,8 @@ class Cadastro extends StatelessWidget {
                       _buildTextField(_passwordController, 'Senha', isPassword: true),
                       const SizedBox(height: 16),
                       _buildTextField(_passwordConfirmController, 'Confirmar senha', isPassword: true),
+                      const SizedBox(height: 16),
+                      _buildTextField(_avatarController, 'URL do Avatar'), // Campo para a URL do avatar
                       const SizedBox(height: 20),
                       SizedBox(
                         height: 60,
@@ -84,8 +89,9 @@ class Cadastro extends StatelessWidget {
                             final email = _emailController.text;
                             final password = _passwordController.text;
                             final confirmPassword = _passwordConfirmController.text;
+                            final avatarUrl = _avatarController.text;
 
-                            if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+                            if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty || avatarUrl.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Todos os campos devem ser preenchidos'),
@@ -114,8 +120,18 @@ class Cadastro extends StatelessWidget {
 
                             try {
                               await Provider.of<AuthProvider>(context, listen: false)
-                                  .register(name, email, password);
-                              Navigator.of(context).pushReplacementNamed("/home");
+                                  .register(name, email, password, avatarUrl);
+
+                              
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => Perfil(
+                                    avatarUrl: avatarUrl,  
+                                    nome: name,
+                                    email: email,
+                                  ),
+                                ),
+                              );
                             } catch (error) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Falha ao se registrar: $error')),
@@ -128,7 +144,7 @@ class Cadastro extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20), 
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),

@@ -20,7 +20,7 @@ class _BibliotecaState extends State<Biblioteca> {
             setState(() {
               userReviews.add(review);
             });
-          },
+          }, onSuccess: () {  },
         );
       },
     );
@@ -49,20 +49,29 @@ class _BibliotecaState extends State<Biblioteca> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: userReviews.length,
-                  itemBuilder: (context, index) {
-                    return _buildCard(userReviews[index]);
-                  },
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                "FAÇA UMA REVIEW!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: userReviews.length,
+                itemBuilder: (context, index) {
+                  return _buildCard(userReviews[index]);
+                },
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(

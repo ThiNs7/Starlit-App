@@ -21,7 +21,7 @@ class Review {
 class ReviewForm extends StatefulWidget {
   final Function(Review) onSubmit;
 
-  const ReviewForm({Key? key, required this.onSubmit}) : super(key: key);
+  const ReviewForm({Key? key, required this.onSubmit, required Null Function() onSuccess}) : super(key: key);
 
   @override
   _ReviewFormState createState() => _ReviewFormState();

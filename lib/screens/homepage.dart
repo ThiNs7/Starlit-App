@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:starlitfilms/components/review_form.dart';
 import 'package:starlitfilms/components/slide.dart';
 import 'package:starlitfilms/components/styles.dart';
-import 'package:starlitfilms/screens/perfil.dart';
-
+import 'package:starlitfilms/screens/Perfil/perfil.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               userReviews.add(review);
             });
-          },
+          }, onSuccess: () {  },
         );
       },
     );
@@ -78,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.search, color: Colors.deepPurple, size: 45),
+                    Icon(Icons.search, color: Color.fromARGB(255, 61, 25, 66), size: 45),
                     SizedBox(width: 8),
                     Expanded(
                       child: TextField(
@@ -102,20 +101,21 @@ class _HomePageState extends State<HomePage> {
             width: double.infinity,
             height: double.infinity,
             decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/homeFundo.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+              image: DecorationImage(
+                image: AssetImage('assets/homeFundo.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: Column(
               children: [
                 const Slide(),
-                const Divider(), 
+                const Divider(),
                 Container(
                   child: Text(
-                      "DESTAQUES",
-                      style: txtSans(20, Colors.white),
-                )),
+                    "DESTAQUES",
+                    style: txtSans(20, Colors.white),
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
                     itemCount: userReviews.length,
@@ -142,6 +142,14 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        "FAÇA UMA REVIEW!",
+                        style: txtSans(30, Colors.white),
+                      ),
+                    ),
+                    const Divider(),
                     Expanded(
                       child: ListView.builder(
                         itemCount: userReviews.length,
@@ -163,7 +171,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          const Perfil(), 
+          Perfil(avatarUrl: '', nome: '', email: '',), // Exibindo a página Perfil
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -204,7 +212,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCard(Review review) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10,10,10,0),
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.6),

@@ -8,13 +8,13 @@ class AuthService  {
 
   final String baseUrl = "https://3d9dba1f-2b5b-433f-a1b0-eb428d2de251-00-32rrmhyucky1c.worf.replit.dev";
 
-  Future<void> register(String nome, String email, String password) async {
+  Future<void> register(String nome, String email, String password, String avatar) async {
     final uri = Uri.parse('$baseUrl/user/register');
 
     final response = await http.post(
       uri,
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'name': nome, 'email': email, 'password': password}),
+      body: json.encode({'name': nome, 'email': email, 'password': password, 'avatar':avatar}),
     );
 
     print('Status Code: ${response.statusCode}');

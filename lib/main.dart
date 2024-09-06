@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const SplashScreenIntro(),
           '/entrar': (context) => const Entrar(),
-          '/biblioteca': (context) => const Biblioteca(),
+          '/biblioteca': (context) =>  Biblioteca(),
           '/home': (context) => const HomePage(),
         },
       ),

@@ -7,9 +7,10 @@ class AuthProvider with ChangeNotifier {
 
   bool get isAuthenticated => _token != null;
   
-  Future<void> register(String nome, String email, String password) async {
+  
+  Future<void> register(String nome, String email, String password, String avatar) async {
     try {
-      await _authService.register(nome, email, password);
+      await _authService.register(nome, email, password, avatar);
     }catch (error) {
       debugPrint('Erro ao registrar: $error');
      rethrow;
