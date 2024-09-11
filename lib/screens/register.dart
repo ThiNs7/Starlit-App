@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
-import 'package:starlitfilms/screens/Perfil/perfil.dart';
+import 'package:starlitfilms/screens/homepage.dart';
 
 
 class Cadastro extends StatelessWidget {
@@ -125,10 +125,8 @@ class Cadastro extends StatelessWidget {
                               
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => Perfil(
-                                    avatarUrl: avatarUrl,  
-                                    nome: name,
-                                    email: email,
+                                  builder: (context) => const HomePage(
+                                   
                                   ),
                                 ),
                               );

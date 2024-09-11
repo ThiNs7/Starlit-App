@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:starlitfilms/components/review_form.dart';
 import 'package:starlitfilms/components/slide.dart';
 import 'package:starlitfilms/components/styles.dart';
+import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +16,8 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
   List<Review> userReviews = [];
 
+  final AuthProvider _authProvider = AuthProvider();
+
   void _showReviewForm() {
     showDialog(
       context: context,
@@ -24,14 +27,21 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               userReviews.add(review);
             });
-          }, onSuccess: () {  },
+          },
+          onSuccess: () {},
         );
       },
     );
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(_authProvider.getCredentials());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -77,7 +87,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.search, color: Color.fromARGB(255, 61, 25, 66), size: 45),
+                    Icon(Icons.search,
+                        color: Color.fromARGB(255, 61, 25, 66), size: 45),
                     SizedBox(width: 8),
                     Expanded(
                       child: TextField(
@@ -171,7 +182,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Perfil(avatarUrl: '', nome: '', email: '',), // Exibindo a página Perfil
+          Perfil(
+            email: '',
+          ), // Exibindo a página Perfil
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

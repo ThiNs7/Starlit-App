@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/editar_perfil.dart';
 
+
 class Perfil extends StatefulWidget {
-  String avatarUrl;
-  final String nome;
   final String email;
 
-  Perfil({
-    Key? key,
-    required this.avatarUrl,
-    required this.nome,
-    required this.email,
-  }) : super(key: key);
+  Perfil({Key? key, required this.email}) : super(key: key);
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
-  String? avatar;
   @override
   void initState() {
     super.initState();
-    avatar = widget.avatarUrl;
+    _loadUserDetails();
   }
+
+  Future<void> _loadUserDetails() async {
+    await Provider.of<AuthProvider>(context, listen: false).fetchUserDetails(widget.email);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final avatarUrl = authProvider.avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+    final nome = widget.email; // Or fetch the actual name if needed
+
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -52,14 +57,14 @@ class _PerfilState extends State<Perfil> {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(avatar!), // Usando NetworkImage
+                          backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage with URL
                         ),
                         const SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.nome,
+                              nome,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -95,13 +100,14 @@ class _PerfilState extends State<Perfil> {
                                 final responseEdit = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const EditarPerfil(),
+                                    builder: (context) =>  EditarPerfil(),
                                   ),
                                 );
-                                print('hehe ${responseEdit['imageUrl']}');
-                                if (responseEdit) {setState((){
-                                  avatar = responseEdit['imageUrl'];
-                                });}
+                                if (responseEdit != null && responseEdit['imageUrl'] != null) {
+                                  setState(() {
+                                    // authProvider = responseEdit['imageUrl'];
+                                  });
+                                }
                               },
                             ),
                             ListTile(
@@ -122,7 +128,9 @@ class _PerfilState extends State<Perfil> {
                             ListTile(
                               leading: const Icon(Icons.logout, color: Colors.white),
                               title: const Text('Logout', style: TextStyle(color: Colors.white)),
-                              onTap: () {},
+                              onTap: () {
+                                
+                              },
                             ),
                           ];
                           return options[index];
