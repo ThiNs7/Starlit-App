@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/editar_perfil.dart';
 
-
 class Perfil extends StatefulWidget {
   final String email;
 
@@ -29,7 +28,7 @@ class _PerfilState extends State<Perfil> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final avatarUrl = authProvider.avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-    final nome = widget.email; // Or fetch the actual name if needed
+    final nome = authProvider.nome ?? widget.email; 
 
     return Scaffold(
       body: Container(
@@ -57,7 +56,7 @@ class _PerfilState extends State<Perfil> {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage with URL
+                          backgroundImage: NetworkImage(avatarUrl),
                         ),
                         const SizedBox(width: 16),
                         Column(
@@ -100,13 +99,13 @@ class _PerfilState extends State<Perfil> {
                                 final responseEdit = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>  EditarPerfil(),
+                                    builder: (context) => EditarPerfil(),
                                   ),
                                 );
                                 if (responseEdit != null && responseEdit['imageUrl'] != null) {
-                                  setState(() {
-                                    // authProvider = responseEdit['imageUrl'];
-                                  });
+                                  Provider.of<AuthProvider>(context, listen: false)
+                                      .updateAvatar(responseEdit['imageUrl']);
+                                  setState(() {});
                                 }
                               },
                             ),

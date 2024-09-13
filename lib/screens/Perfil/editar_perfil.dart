@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:starlitfilms/controllers/authProvider.dart';
 
 class EditarPerfil extends StatelessWidget {
   final TextEditingController _avatarController = TextEditingController();
@@ -22,8 +24,9 @@ class EditarPerfil extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-            
-                Navigator.pop(context, {'imageUrl': _avatarController.text});
+                final newAvatarUrl = _avatarController.text;
+                Provider.of<AuthProvider>(context, listen: false).updateAvatar(newAvatarUrl);
+                Navigator.pop(context, {'imageUrl': newAvatarUrl});
               },
               child: const Text('Salvar'),
             ),
