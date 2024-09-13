@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:starlitfilms/components/splash_screen.dart';
+import 'package:starlitfilms/screens/amigos.dart';
+
 import 'package:starlitfilms/screens/biblioteca.dart';
 import 'package:starlitfilms/screens/home.dart';
-import 'package:http/http.dart' as http;
+import 'package:starlitfilms/screens/perfil.dart';
+
 
 
 
@@ -18,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   List pageList = [
     const Home(),
     const Biblioteca(),
+    const Perfil(),
+    AmigosPage()
   ];
 
   int pageIndex = 0;
