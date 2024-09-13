@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/register.dart';
-import 'package:starlitfilms/screens/homepage.dart'; // Certifique-se de ter a tela de HomePage
+import 'package:starlitfilms/screens/homepage.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});

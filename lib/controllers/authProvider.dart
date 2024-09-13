@@ -8,11 +8,13 @@ class AuthProvider with ChangeNotifier {
   String? _nome;
   String? _email;
   String? _avatar;
+  String? _descricao;  
   final AuthService _authService = AuthService();
 
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
+  String? get descricao => _descricao;  
 
   void setAuthToken(String token) {
     _token = token;
@@ -31,6 +33,16 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateNome(String newNome) {
+    _nome = newNome;
+    notifyListeners();
+  }
+
+  void updateDescricao(String newDescricao) {
+    _descricao = newDescricao;
+    notifyListeners();
+  }
+
   setCredentials(token) async {
     try {
       final responseCredentials = await _authService.verifyAuthentication(token);
@@ -38,7 +50,8 @@ class AuthProvider with ChangeNotifier {
       _nome = responseDecoded['name'].toString();
       _email = responseDecoded['email'].toString();
       _avatar = responseDecoded['avatar'].toString();
-      notifyListeners(); // Notificar ouvintes sobre a atualização dos dados
+      _descricao = responseDecoded['description'].toString(); 
+      notifyListeners();
     } catch (err) {
       print('falha: $err');
     }
@@ -48,7 +61,8 @@ class AuthProvider with ChangeNotifier {
     return {
       "nome": _nome,
       "email": _email,
-      "avatar": _avatar
+      "avatar": _avatar,
+      "descricao": _descricao, 
     };
   }
 
@@ -78,6 +92,7 @@ class AuthProvider with ChangeNotifier {
       final userDetails = await _authService.fetchUserDetails(email);
       _nome = userDetails['name'];
       _avatar = userDetails['avatar'];
+      _descricao = userDetails['description']; 
       notifyListeners();
     } catch (error) {
       debugPrint('Erro ao buscar detalhes do usuário: $error');

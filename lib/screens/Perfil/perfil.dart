@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/editar_perfil.dart';
+import 'package:starlitfilms/screens/entrar.dart';
 
 class Perfil extends StatefulWidget {
   final String email;
@@ -28,7 +29,7 @@ class _PerfilState extends State<Perfil> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final avatarUrl = authProvider.avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-    final nome = authProvider.nome ?? widget.email; 
+    final nome = authProvider.nome ?? widget.email;
 
     return Scaffold(
       body: Container(
@@ -64,7 +65,7 @@ class _PerfilState extends State<Perfil> {
                           children: [
                             Text(
                               nome,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -72,7 +73,7 @@ class _PerfilState extends State<Perfil> {
                             ),
                             Text(
                               widget.email,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                               ),
@@ -127,8 +128,48 @@ class _PerfilState extends State<Perfil> {
                             ListTile(
                               leading: const Icon(Icons.logout, color: Colors.white),
                               title: const Text('Logout', style: TextStyle(color: Colors.white)),
-                              onTap: () {
-                                
+                              onTap: () async {
+                                bool? shouldLogout = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.black,
+                                      title: const Text(
+                                        'Confirmar Logout',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      content: const Text(
+                                        'Você tem certeza de que deseja sair?',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                        ),
+                                        const Divider(
+                                          color: Colors.white30,
+                                          thickness: 1,
+                                        ),
+                                        TextButton(
+                                          child: const Text('Sair', style: TextStyle(color: Colors.redAccent)),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                if (shouldLogout == true) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const Entrar()),
+                                  );
+                                }
                               },
                             ),
                           ];
