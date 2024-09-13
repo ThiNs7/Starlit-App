@@ -4,9 +4,10 @@ import 'package:starlitfilms/components/slide.dart';
 import 'package:starlitfilms/components/styles.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
+import 'package:starlitfilms/screens/amigos.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -185,6 +186,7 @@ class _HomePageState extends State<HomePage> {
           Perfil(
             email: '',
           ), // Exibindo a página Perfil
+          AmigosPage()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
