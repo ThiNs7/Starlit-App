@@ -106,10 +106,10 @@ class _SlideState extends State<Slide> {
             PageView(
               controller: controller,
               children: [
-                buildSlide('assets/image1.png'),
-                buildSlide('assets/image1.png'),
-                buildSlide('assets/image1.png'),
-                buildSlide('assets/image1.png'),
+                buildSlide('assets/filmeSlide1.png'),
+                buildSlide('assets/filmeSlide2.png'),
+                buildSlide('assets/filmeSlide3.png'),
+                buildSlide('assets/filmeSlide4.png'),
               ],
             ),
             

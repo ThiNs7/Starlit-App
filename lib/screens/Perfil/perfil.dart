@@ -65,18 +65,15 @@ class _PerfilState extends State<Perfil> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 30, 10, 0),
-                              child: Text(
-                                nome,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                ),
+                            Text(
+                              nome,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            const SizedBox(height: 4),
                             Text(
                               widget.email,
                               style: const TextStyle(
@@ -88,7 +85,7 @@ class _PerfilState extends State<Perfil> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 70),
+                    const SizedBox(height: 30),
                     Expanded(
                       child: ListView.separated(
                         itemCount: 5,
@@ -161,6 +158,7 @@ class _PerfilState extends State<Perfil> {
                                 );
 
                                 if (shouldLogout == true) {
+                                  authProvider.logout();
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(builder: (context) => const Entrar()),
@@ -206,7 +204,7 @@ class _PerfilState extends State<Perfil> {
               ),
               TextField(
                 controller: _avatarController,
-                style: const TextStyle(color:Color.fromARGB(188, 219, 219, 219)),
+                style: const TextStyle(color: Color.fromARGB(188, 219, 219, 219)),
                 decoration: const InputDecoration(
                   labelText: 'URL do Avatar',
                   labelStyle: TextStyle(color: Colors.white), 

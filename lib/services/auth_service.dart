@@ -2,15 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  String? _token;
+  final String baseUrl = "https://0e57f7b4-626f-4f61-9128-cc6604255737-00-3i5sje1qg1i89.worf.replit.dev";
 
-  bool get isAuthenticated => _token != null;
-
-  final String baseUrl =
-      "https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev";
-
-  Future<void> register(
-      String nome, String email, String password, String avatar) async {
+  Future<void> register(String nome, String email, String password, String avatar) async {
     final uri = Uri.parse('$baseUrl/user/register');
 
     final response = await http.post(
@@ -20,7 +14,7 @@ class AuthService {
         'name': nome,
         'email': email,
         'password': password,
-        'avatar': avatar
+        'avatar': avatar,
       }),
     );
 
@@ -29,46 +23,72 @@ class AuthService {
     }
   }
 
-  login(String email, String password) async {
+  Future<String> login(String email, String password) async {
     final url = Uri.parse("$baseUrl/user/login");
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({'email': email, 'password': password}),
-      );
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'email': email, 'password': password}),
+    );
 
-      if (response.statusCode == 200) {
-        // final responseData = json.decode(response.body);
-        // _token = responseData['token'];
-        return response.body;
-      } else {
-        throw Exception('Failed to login: ${response.body}');
-      }
-    } catch (erro) {
-      return 'falha: ${erro}';
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to login: ${response.body}');
     }
   }
 
-  verifyAuthentication(String token) async {
+  Future<Map<String, dynamic>> verifyAuthentication(String token) async {
     final url = Uri.parse("$baseUrl/user/verify-auth");
 
-    final response = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({'loggedToken': token}));
-  
-    return json.decode(response.body);
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({'loggedToken': token}),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to verify authentication: ${response.body}');
+    }
   }
 
   Future<Map<String, dynamic>> fetchUserDetails(String email) async {
     final url = Uri.parse("$baseUrl/user/details?email=$email");
 
-    final response =
-        await http.get(url, headers: {'Content-Type': 'application/json'});
+    final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to fetch user details: ${response.body}');
+    }
+  }
+
+  Future<void> updateUserDetails(String email, String nome, String avatar, String descricao) async {
+    final url = Uri.parse("$baseUrl/user/update");
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_TOKEN_HERE', 
+      },
+      body: json.encode({
+        'email': email,
+        'name': nome,
+        'avatar': avatar,
+        'description': descricao,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update user details: ${response.body}');
     }
   }
 }
