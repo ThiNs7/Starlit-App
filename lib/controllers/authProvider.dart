@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:starlitfilms/services/auth_service.dart';
 
@@ -69,6 +68,9 @@ class AuthProvider with ChangeNotifier {
   Future<void> register(String nome, String email, String password, String avatar) async {
     try {
       await _authService.register(nome, email, password, avatar);
+      
+      updateAvatar(avatar);
+      updateNome(nome);
     } catch (error) {
       debugPrint('Erro ao registrar: $error');
       rethrow;

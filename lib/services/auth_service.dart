@@ -7,7 +7,7 @@ class AuthService {
   bool get isAuthenticated => _token != null;
 
   final String baseUrl =
-      "https://3d9dba1f-2b5b-433f-a1b0-eb428d2de251-00-32rrmhyucky1c.worf.replit.dev";
+      "https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev";
 
   Future<void> register(
       String nome, String email, String password, String avatar) async {

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/homepage.dart';
 
-
 class Cadastro extends StatelessWidget {
   Cadastro({super.key});
   final _emailController = TextEditingController();
@@ -73,7 +72,7 @@ class Cadastro extends StatelessWidget {
                       const SizedBox(height: 16),
                       _buildTextField(_passwordConfirmController, 'Confirmar senha', isPassword: true),
                       const SizedBox(height: 16),
-                      _buildTextField(_avatarController, 'URL do Avatar'), // Campo para a URL do avatar
+                      _buildTextField(_avatarController, 'URL do Avatar'), 
                       const SizedBox(height: 20),
                       SizedBox(
                         height: 60,
@@ -122,12 +121,10 @@ class Cadastro extends StatelessWidget {
                               await Provider.of<AuthProvider>(context, listen: false)
                                   .register(name, email, password, avatarUrl);
 
-                              
+                              // Navegue para a página inicial após o registro
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => const HomePage(
-                                   
-                                  ),
+                                  builder: (context) => const HomePage(),
                                 ),
                               );
                             } catch (error) {

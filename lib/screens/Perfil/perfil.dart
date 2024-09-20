@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
-import 'package:starlitfilms/screens/Perfil/editar_perfil.dart';
 import 'package:starlitfilms/screens/entrar.dart';
 
 class Perfil extends StatefulWidget {
@@ -28,7 +27,8 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final avatarUrl = authProvider.avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+    final avatarUrl = authProvider.avatar ?? 
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
     final nome = authProvider.nome ?? widget.email;
 
     return Scaffold(
@@ -53,22 +53,28 @@ class _PerfilState extends State<Perfil> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(avatarUrl),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(avatarUrl),
+                          ),
                         ),
                         const SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              nome,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 30, 10, 0),
+                              child: Text(
+                                nome,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                             Text(
@@ -82,7 +88,7 @@ class _PerfilState extends State<Perfil> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 70),
                     Expanded(
                       child: ListView.separated(
                         itemCount: 5,
@@ -95,34 +101,24 @@ class _PerfilState extends State<Perfil> {
                           List<Widget> options = [
                             ListTile(
                               leading: const Icon(Icons.edit, color: Colors.white),
-                              title: const Text('Edit Profile', style: TextStyle(color: Colors.white)),
-                              onTap: () async {
-                                final responseEdit = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditarPerfil(),
-                                  ),
-                                );
-                                if (responseEdit != null && responseEdit['imageUrl'] != null) {
-                                  Provider.of<AuthProvider>(context, listen: false)
-                                      .updateAvatar(responseEdit['imageUrl']);
-                                  setState(() {});
-                                }
+                              title: const Text('Editar Perfil', style: TextStyle(color: Colors.white)),
+                              onTap: () {
+                                _showEditProfileDialog(context, authProvider);
                               },
                             ),
                             ListTile(
                               leading: const Icon(Icons.notifications, color: Colors.white),
-                              title: const Text('Notifications', style: TextStyle(color: Colors.white)),
+                              title: const Text('Notificações', style: TextStyle(color: Colors.white)),
                               onTap: () {},
                             ),
                             ListTile(
                               leading: const Icon(Icons.security, color: Colors.white),
-                              title: const Text('Privacy Settings', style: TextStyle(color: Colors.white)),
+                              title: const Text('Configurações de Privacidade', style: TextStyle(color: Colors.white)),
                               onTap: () {},
                             ),
                             ListTile(
                               leading: const Icon(Icons.help, color: Colors.white),
-                              title: const Text('Help & Support', style: TextStyle(color: Colors.white)),
+                              title: const Text('Ajuda e Suporte', style: TextStyle(color: Colors.white)),
                               onTap: () {},
                             ),
                             ListTile(
@@ -184,6 +180,58 @@ class _PerfilState extends State<Perfil> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
+    final TextEditingController _nomeController = TextEditingController(text: authProvider.nome);
+    final TextEditingController _avatarController = TextEditingController(text: authProvider.avatar);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.black,
+          title: const Text('Editar Perfil', style: TextStyle(color: Colors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _nomeController,
+                style: const TextStyle(color: Color.fromARGB(188, 219, 219, 219)), 
+                decoration: const InputDecoration(
+                  labelText: 'Nome',
+                  labelStyle: TextStyle(color: Colors.white), 
+                ),
+              ),
+              TextField(
+                controller: _avatarController,
+                style: const TextStyle(color:Color.fromARGB(188, 219, 219, 219)),
+                decoration: const InputDecoration(
+                  labelText: 'URL do Avatar',
+                  labelStyle: TextStyle(color: Colors.white), 
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Salvar', style: TextStyle(color: Colors.redAccent)),
+              onPressed: () {
+                authProvider.updateNome(_nomeController.text);
+                authProvider.updateAvatar(_avatarController.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
