@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  PageController _pageController = PageController();
   List<Review> userReviews = [];
 
   final AuthProvider _authProvider = AuthProvider();
@@ -38,6 +39,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,83 +113,17 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: IndexedStack(
-        index: selectedIndex,
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        onPageChanged: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
         children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/homeFundo.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Column(
-              children: [
-                const Slide(),
-                const Divider(),
-                Container(
-                  child: Text(
-                    "DESTAQUES",
-                    style: txtSans(20, Colors.white),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: userReviews.length,
-                    itemBuilder: (context, index) {
-                      return _buildCard(userReviews[index]);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Scaffold(
-            backgroundColor: Colors.deepPurple[800],
-            body: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/homeFundo.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        "FAÇA UMA REVIEW!",
-                        style: txtSans(30, Colors.white),
-                      ),
-                    ),
-                    const Divider(),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: userReviews.length,
-                        itemBuilder: (context, index) {
-                          return _buildCard(userReviews[index]);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: _showReviewForm,
-              backgroundColor: const Color.fromARGB(255, 61, 25, 66),
-              child: const Icon(Icons.add, size: 40, color: Colors.white),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(35),
-              ),
-            ),
-          ),
+          _buildFirstPage(),
+          _buildSecondPage(),
           Perfil(email: ''),
           AmigosPage(),
         ],
@@ -193,6 +134,7 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
+            _pageController.jumpToPage(index); // Anima a transição
           });
         },
         showSelectedLabels: false,
@@ -223,6 +165,86 @@ class _HomePageState extends State<HomePage> {
         ],
         selectedIconTheme: const IconThemeData(size: 70),
         unselectedIconTheme: const IconThemeData(size: 50),
+      ),
+    );
+  }
+
+  Widget _buildFirstPage() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/homeFundo.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Column(
+        children: [
+          const Slide(),
+          const Divider(),
+          Container(
+            child: Text(
+              "DESTAQUES",
+              style: txtSans(20, Colors.white),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: userReviews.length,
+              itemBuilder: (context, index) {
+                return _buildCard(userReviews[index]);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSecondPage() {
+    return Scaffold(
+      backgroundColor: Colors.deepPurple[800],
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/homeFundo.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Text(
+                  "FAÇA UMA REVIEW!",
+                  style: txtSans(30, Colors.white),
+                ),
+              ),
+              const Divider(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: userReviews.length,
+                  itemBuilder: (context, index) {
+                    return _buildCard(userReviews[index]);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showReviewForm,
+        backgroundColor: const Color.fromARGB(255, 61, 25, 66),
+        child: const Icon(Icons.add, size: 40, color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(35),
+        ),
       ),
     );
   }

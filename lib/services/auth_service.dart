@@ -4,8 +4,12 @@ import 'package:http/http.dart' as http;
 class AuthService {
   final String baseUrl = "https://0e57f7b4-626f-4f61-9128-cc6604255737-00-3i5sje1qg1i89.worf.replit.dev";
 
+  Uri _createUri(String path) {
+    return Uri.parse('$baseUrl$path');
+  }
+
   Future<void> register(String nome, String email, String password, String avatar) async {
-    final uri = Uri.parse('$baseUrl/user/register');
+    final uri = _createUri('/user/register');
 
     final response = await http.post(
       uri,
@@ -24,7 +28,7 @@ class AuthService {
   }
 
   Future<String> login(String email, String password) async {
-    final url = Uri.parse("$baseUrl/user/login");
+    final url = _createUri("/user/login");
 
     final response = await http.post(
       url,
@@ -40,7 +44,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> verifyAuthentication(String token) async {
-    final url = Uri.parse("$baseUrl/user/verify-auth");
+    final url = _createUri("/user/verify-auth");
 
     final response = await http.post(
       url,
@@ -59,7 +63,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> fetchUserDetails(String email) async {
-    final url = Uri.parse("$baseUrl/user/details?email=$email");
+    final url = _createUri("/user/details?email=$email");
 
     final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
@@ -71,13 +75,13 @@ class AuthService {
   }
 
   Future<void> updateUserDetails(String email, String nome, String avatar, String descricao) async {
-    final url = Uri.parse("$baseUrl/user/update");
+    final url = _createUri("/user/update");
 
     final response = await http.put(
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer YOUR_TOKEN_HERE', 
+        'Authorization': 'Bearer YOUR_TOKEN_HERE', // Atualize para usar o token correto
       },
       body: json.encode({
         'email': email,
@@ -89,6 +93,65 @@ class AuthService {
 
     if (response.statusCode != 200) {
       throw Exception('Failed to update user details: ${response.body}');
+    }
+  }
+
+  Future<List<dynamic>> fetchFriends(String email, String token) async {
+    final uri = _createUri('/friends/buscar');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({'email': email}),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body); // Retorna a lista de amigos
+    } else {
+      throw Exception('Failed to fetch friends: ${response.body}');
+    }
+  }
+
+  Future<void> addFriend(String email, String emailFriend, String token) async {
+    final uri = _createUri('/friends/adicionar');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'email': email,
+        'emailFriend': emailFriend,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add friend: ${response.body}');
+    }
+  }
+
+  Future<void> removeFriend(String email, String emailFriend, String token) async {
+    final uri = _createUri('/friends/remover');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'email': email,
+        'emailFriend': emailFriend,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to remove friend: ${response.body}');
     }
   }
 }

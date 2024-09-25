@@ -9,12 +9,14 @@ class AuthProvider with ChangeNotifier {
   String? _email;
   String? _avatar;
   String? _descricao;
+  List<dynamic> _amigos = []; 
   final AuthService _authService = AuthService();
 
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
   String? get descricao => _descricao;
+  List<dynamic> get amigos => _amigos; 
 
   void setAuthToken(String? token) {
     _token = token;
@@ -50,10 +52,10 @@ class AuthProvider with ChangeNotifier {
 
     if (email != null) {
       try {
-        // Atualiza os detalhes do usuário na API
+        
         await _authService.updateUserDetails(email, _nome ?? '', _avatar ?? '', descricao);
         
-        // Salvar os detalhes no SharedPreferences
+        
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('nome', _nome ?? '');
         prefs.setString('avatar', _avatar ?? '');
@@ -82,7 +84,7 @@ class AuthProvider with ChangeNotifier {
       _descricao = responseDecoded['description'].toString();
       notifyListeners();
     } catch (err) {
-      print('falha: $err');
+      print('Falha: $err');
     }
   }
 
@@ -131,7 +133,42 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  void logout() {
+  Future<void> fetchFriends() async {
+    if (_token != null && _email != null) {
+      try {
+        _amigos = await _authService.fetchFriends(_email!, _token!);
+        notifyListeners();
+      } catch (error) {
+        debugPrint('Erro ao buscar amigos: $error');
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> addFriend(String emailFriend) async {
+    if (_token != null && _email != null) {
+      try {
+        await _authService.addFriend(_email!, emailFriend, _token!);
+        await fetchFriends();
+      } catch (error) {
+        debugPrint('Erro ao adicionar amigo: $error');
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> removeFriend(String emailFriend) async {
+    if (_token != null && _email != null) {
+      try {
+        await _authService.removeFriend(_email!, emailFriend, _token!);
+        await fetchFriends();
+      } catch (error) {
+        debugPrint('Erro ao remover amigo: $error');
+        rethrow;
+      }
+    }
+  }
+    void logout() {
     _token = null;
     _nome = null;
     _email = null;
@@ -146,3 +183,4 @@ class AuthProvider with ChangeNotifier {
     });
   }
 }
+
