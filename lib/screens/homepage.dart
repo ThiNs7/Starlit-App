@@ -183,10 +183,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Perfil(
-            email: '',
-          ), // Exibindo a página Perfil
-          AmigosPage()
+          Perfil(email: ''),
+          AmigosPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -204,22 +202,26 @@ class _HomePageState extends State<HomePage> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 30, color: Colors.white),
+            activeIcon: _CircledIcon(icon: Icons.home),
             label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu, size: 30, color: Colors.white),
+            activeIcon: _CircledIcon(icon: Icons.menu),
             label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 30, color: Colors.white),
+            activeIcon: _CircledIcon(icon: Icons.person),
             label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat, size: 30, color: Colors.white),
+            activeIcon: _CircledIcon(icon: Icons.chat),
             label: '',
           ),
         ],
-        selectedIconTheme: const IconThemeData(size: 60),
+        selectedIconTheme: const IconThemeData(size: 70),
         unselectedIconTheme: const IconThemeData(size: 50),
       ),
     );
@@ -280,6 +282,24 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CircledIcon extends StatelessWidget {
+  final IconData icon;
+
+  const _CircledIcon({required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: const Color.fromARGB(255, 61, 25, 66),
+      ),
+      child: Icon(icon, size: 40, color: Colors.white),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/homepage.dart';
+import 'package:starlitfilms/screens/login.dart';
 
 class Cadastro extends StatelessWidget {
   Cadastro({super.key});
@@ -75,7 +76,8 @@ class Cadastro extends StatelessWidget {
                       _buildTextField(_avatarController, 'URL do Avatar'), 
                       const SizedBox(height: 20),
                       SizedBox(
-                        height: 60,
+                        width: 200, 
+                        height: 50,                     
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(255, 121, 42, 84),
@@ -121,7 +123,6 @@ class Cadastro extends StatelessWidget {
                               await Provider.of<AuthProvider>(context, listen: false)
                                   .register(name, email, password, avatarUrl);
 
-                              // Navegue para a página inicial após o registro
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => const HomePage(),
@@ -140,6 +141,18 @@ class Cadastro extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      TextButton(
+                        onPressed: () {
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                         ); 
+                        },
+                        child: const Text(
+                          'Já tem uma conta? Voltar para Login',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ],
                   ),
                 ),

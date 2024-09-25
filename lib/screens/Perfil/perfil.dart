@@ -37,7 +37,7 @@ class _PerfilState extends State<Perfil> {
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/fundoPrimeiro.png'),
+            image: AssetImage('assets/homeFundo.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -73,7 +73,13 @@ class _PerfilState extends State<Perfil> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                             const SizedBox(height: 4),
+                            Container(
+                              width: 200, 
+                              height: 0.8,
+                              color: Colors.white, 
+                            ),
+                            const SizedBox(height: 8), 
                             Text(
                               widget.email,
                               style: const TextStyle(
