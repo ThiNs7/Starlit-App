@@ -41,7 +41,7 @@ class _AmigosPageState extends State<AmigosPage> {
     });
 
     final response = await http.post(
-      Uri.parse('https://0e57f7b4-626f-4f61-9128-cc6604255737-00-3i5sje1qg1i89.worf.replit.dev/buscarAmigos'),
+      Uri.parse('https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev/buscarAmigos'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': userEmail}),
     );
@@ -71,7 +71,7 @@ class _AmigosPageState extends State<AmigosPage> {
 
   Future<void> _adicionarAmigo(String emailFriend) async {
     final response = await http.post(
-      Uri.parse('https://0e57f7b4-626f-4f61-9128-cc6604255737-00-3i5sje1qg1i89.worf.replit.dev/adicionarAmigo'),
+      Uri.parse('https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev/adicionarAmigo'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': userEmail, 'emailFriend': emailFriend}),
     );
@@ -90,7 +90,7 @@ class _AmigosPageState extends State<AmigosPage> {
 
   Future<void> _removerAmigo(String emailFriend) async {
     final response = await http.post(
-      Uri.parse('https://0e57f7b4-626f-4f61-9128-cc6604255737-00-3i5sje1qg1i89.worf.replit.dev/removerAmigo'),
+      Uri.parse('https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev/removerAmigo'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': userEmail, 'emailFriend': emailFriend}),
     );

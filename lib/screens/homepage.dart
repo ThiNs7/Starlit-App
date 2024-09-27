@@ -110,6 +110,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            IconButton(
+              icon: const Icon(Icons.notifications, color: Colors.white),
+              onPressed: () {
+                // Ação para a notificação
+              },
+            ),
           ],
         ),
       ),
@@ -134,7 +140,7 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           setState(() {
             selectedIndex = index;
-            _pageController.jumpToPage(index); // Anima a transição
+            _pageController.jumpToPage(index);
           });
         },
         showSelectedLabels: false,
@@ -184,11 +190,13 @@ class _HomePageState extends State<HomePage> {
           const Slide(),
           const Divider(),
           Container(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              "DESTAQUES",
+              "FILMES MAIS COMENTADOS",
               style: txtSans(20, Colors.white),
             ),
           ),
+          _buildImageRow(), 
           Expanded(
             child: ListView.builder(
               itemCount: userReviews.length,
@@ -290,17 +298,30 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const Icon(Icons.visibility, color: Colors.white),
-              const SizedBox(width: 10),
-              CircleAvatar(backgroundImage: AssetImage(review.imagePath)),
-              const SizedBox(width: 10),
-              CircleAvatar(backgroundImage: AssetImage(review.imagePath)),
-              const SizedBox(width: 10),
-              CircleAvatar(backgroundImage: AssetImage(review.imagePath)),
-            ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            backgroundImage: AssetImage(userReviews.isNotEmpty ? userReviews[0].imagePath : 'assets/filmeSlide1.png'),
+            radius: 60,
+          ),
+          const SizedBox(width: 20),
+          CircleAvatar(
+            backgroundImage: AssetImage(userReviews.length > 1 ? userReviews[1].imagePath : 'assets/filmeSlide2.png'),
+            radius: 60,
+          ),
+          const SizedBox(width: 20),
+          CircleAvatar(
+            backgroundImage: AssetImage(userReviews.length > 2 ? userReviews[2].imagePath : 'assets/filmeSlide3.png'),
+            radius: 60,
           ),
         ],
       ),
@@ -311,17 +332,23 @@ class _HomePageState extends State<HomePage> {
 class _CircledIcon extends StatelessWidget {
   final IconData icon;
 
-  const _CircledIcon({required this.icon});
+  const _CircledIcon({super.key, required this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: const Color.fromARGB(255, 61, 25, 66),
       ),
-      child: Icon(icon, size: 40, color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Icon(
+          icon,
+          size: 30,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

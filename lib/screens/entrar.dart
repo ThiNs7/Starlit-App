@@ -15,7 +15,7 @@ class Entrar extends StatelessWidget {
               height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/fundoPrimeiro.png'),
+                  image: AssetImage('assets/homeFundo.png'),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -47,8 +47,8 @@ class Cadastro extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color.fromARGB(0, 0, 0, 0).withOpacity(0.7),
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50),
                     ),
                   ),
                   child: Column(
@@ -66,15 +66,15 @@ class Cadastro extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildTextField(_nameController, 'Nome'),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 5),
                       _buildTextField(_emailController, 'Email'),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 5),
                       _buildTextField(_passwordController, 'Senha', isPassword: true),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 5),
                       _buildTextField(_passwordConfirmController, 'Confirmar senha', isPassword: true),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 5),
                       _buildTextField(_avatarController, 'URL do Avatar'), 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
                       SizedBox(
                         width: 200, 
                         height: 50,                     
