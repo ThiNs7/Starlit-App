@@ -16,6 +16,8 @@ class Review {
     required this.imagePath,
     this.isPublic = true, 
   });
+
+  get imageUrl => null;
 }
 
 class ReviewForm extends StatefulWidget {

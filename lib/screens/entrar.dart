@@ -38,8 +38,8 @@ class Entrar extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Color.fromARGB(0, 0, 0, 0).withOpacity(0.6),
                       borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50),
                       ),
                     ),
                     child: Column(

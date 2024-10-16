@@ -5,6 +5,7 @@ import 'package:starlitfilms/components/styles.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
 import 'package:starlitfilms/screens/amigos.dart';
+import 'package:starlitfilms/screens/notificacao.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -111,9 +112,13 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.notifications, color: Colors.white),
+              icon: const Icon(Icons.notifications, color: Colors.white, size: 45),
               onPressed: () {
-                // Ação para a notificação
+                Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>  const Notificacao(),
+                                ),
+                              );
               },
             ),
           ],
@@ -188,28 +193,29 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           const Slide(),
-          const Divider(),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              "FILMES MAIS COMENTADOS",
-              style: txtSans(20, Colors.white),
-            ),
+            child: Image.asset('assets/filmesMaisComentados.png'),
           ),
           _buildImageRow(), 
+          Container(
+            child: Image.asset('assets/linha1.png'),
+          ),
+      
           Expanded(
             child: ListView.builder(
               itemCount: userReviews.length,
               itemBuilder: (context, index) {
                 return _buildCard(userReviews[index]);
+                
               },
             ),
           ),
         ],
       ),
+
     );
   }
-
+  
   Widget _buildSecondPage() {
     return Scaffold(
       backgroundColor: Colors.deepPurple[800],
@@ -256,7 +262,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
+  
   Widget _buildCard(Review review) {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),

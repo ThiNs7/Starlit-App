@@ -111,6 +111,7 @@ class AuthProvider with ChangeNotifier {
   Future<bool> login(String email, String password) async {
     try {
       final responseData = await _authService.login(email, password);
+      print('Digero ${responseData}');
       var responseDecoded = jsonDecode(responseData);
       setAuthToken(responseDecoded['token'].toString());
       return true;

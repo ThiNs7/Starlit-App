@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = "https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev";
+  final String baseUrl = "https://46a6f16b-0f3a-4dfa-b2cf-1fce86437b0e-00-34kqndql0gllw.kirk.replit.dev";
 
   Uri _createUri(String path) {
     return Uri.parse('$baseUrl$path');
@@ -28,13 +28,15 @@ class AuthService {
   }
 
   Future<String> login(String email, String password) async {
+    print('fabroca');
     final url = _createUri("/user/login");
-
+    print('Tecnica');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'email': email, 'password': password}),
     );
+    print('rboerto carlos: ${response}');
 
     if (response.statusCode == 200) {
       return response.body;
