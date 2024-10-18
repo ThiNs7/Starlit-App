@@ -41,7 +41,7 @@ class _AmigosPageState extends State<AmigosPage> {
     });
 
     final response = await http.post(
-      Uri.parse('https://a81d930b-8145-426a-a992-3ae5212953d1-00-141ku1p7be0mi.janeway.replit.dev/buscarAmigos'),
+      Uri.parse('https://afaa0946-c534-4bea-9f4f-3ce9c82746c0-00-29z2fpfbiqe87.riker.replit.dev/buscarAmigos'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': userEmail}),
     );

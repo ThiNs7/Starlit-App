@@ -310,23 +310,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildImageRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+    return const Padding(
+      padding:  EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            backgroundImage: AssetImage(userReviews.isNotEmpty ? userReviews[0].imagePath : 'assets/filmeSlide1.png'),
+            backgroundImage: AssetImage( 'assets/filmeSlide1.png'),
             radius: 60,
           ),
-          const SizedBox(width: 20),
+           SizedBox(width: 20),
           CircleAvatar(
-            backgroundImage: AssetImage(userReviews.length > 1 ? userReviews[1].imagePath : 'assets/filmeSlide2.png'),
+            backgroundImage: AssetImage('assets/filmeSlide2.png'),
             radius: 60,
           ),
-          const SizedBox(width: 20),
+           SizedBox(width: 20),
           CircleAvatar(
-            backgroundImage: AssetImage(userReviews.length > 2 ? userReviews[2].imagePath : 'assets/filmeSlide3.png'),
+            backgroundImage: AssetImage('assets/filmeSlide3.png'),
             radius: 60,
           ),
         ],
@@ -343,9 +343,9 @@ class _CircledIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        color: const Color.fromARGB(255, 61, 25, 66),
+        color:  Color.fromARGB(255, 61, 25, 66),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
