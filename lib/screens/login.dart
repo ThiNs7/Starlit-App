@@ -4,11 +4,17 @@ import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/register.dart';
 import 'package:starlitfilms/screens/homepage.dart';
 
-class Login extends StatelessWidget {
-  Login({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;  // Variável para controlar o estado de carregamento
 
   @override
   Widget build(BuildContext context) {
@@ -66,50 +72,27 @@ class Login extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.7,
                       height: 60,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          final email = _emailController.text.trim();
-                          final password = _passwordController.text.trim();
-
-                          if (email.isEmpty || password.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('Email e senha não podem ser vazios'),
-                              ),
-                            );
-                            return;
-                          }
-                          try {
-                            var tryLogin = await Provider.of<AuthProvider>(
-                                    context,
-                                    listen: false)
-                                .login(email, password);
-                            if (tryLogin) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
-                                ),
-                              );
-                            }
-                          } catch (error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text('Falha ao fazer login: $error')),
-                            );
-                          }
-                        },
+                        onPressed: _isLoading ? null : _login,  // Desabilita o botão enquanto carrega
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 121, 42, 84),
+                          backgroundColor: const Color.fromARGB(255, 121, 42, 84),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                         ),
-                        child: const Text(
-                          'LOGIN',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 24, // Define o tamanho do círculo
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white), // Cor do círculo
+                                ),
+                              )
+                            : const Text(
+                                'LOGIN',
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -133,6 +116,57 @@ class Login extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email e senha não podem ser vazios'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;  // Ativa o estado de carregamento
+    });
+
+    try {
+      var tryLogin = await Provider.of<AuthProvider>(context, listen: false)
+          .login(email, password);
+
+      if (tryLogin) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text('Login realizado com sucesso!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Falha ao fazer login: $error'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;  // Desativa o estado de carregamento
+      });
+    }
   }
 
   Widget _buildTextField(TextEditingController controller, String labelText,

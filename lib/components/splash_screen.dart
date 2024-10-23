@@ -21,7 +21,7 @@ class _SplashScreenIntroState extends State<SplashScreenIntro> {
         ),
         duration: const Duration(milliseconds: 2500),
         animationDuration: const Duration(milliseconds: 1250),
-        nextScreen: const HomePage(),
+        nextScreen: HomePage(),
       ),
     );
   }
