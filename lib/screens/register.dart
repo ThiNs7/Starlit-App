@@ -10,7 +10,7 @@ class Cadastro extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
   final _nameController = TextEditingController();
-  final _avatarController = TextEditingController(); 
+  final _avatarController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,141 +22,176 @@ class Cadastro extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/loginFundo.png'),
+                  image: AssetImage('assets/fundoLogin.png'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
           SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 40),
-                Center(
-                  child: Image.asset(
-                    'assets/logoCompleta.png',
-                    width: 300,
-                    height: 300,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(0, 0, 0, 0).withOpacity(0.7),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 80),
+                  Center(
+                    child: Image.asset(
+                      'assets/logoCompleta.png',
+                      width: 330,
+                      height: 330,
                     ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'REGISTRAR',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildTextField(_nameController, 'Nome'),
-                      const SizedBox(height: 5),
-                      _buildTextField(_emailController, 'Email'),
-                      const SizedBox(height: 5),
-                      _buildTextField(_passwordController, 'Senha', isPassword: true),
-                      const SizedBox(height: 5),
-                      _buildTextField(_passwordConfirmController, 'Confirmar senha', isPassword: true),
-                      const SizedBox(height: 5),
-                      _buildTextField(_avatarController, 'URL do Avatar'), 
-                      const SizedBox(height: 15),
-                      SizedBox(
-                        width: 200, 
-                        height: 50,                     
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 121, 42, 84),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildTextField(_nameController, 'Nome', Icons.person),
+                        const SizedBox(height: 30),
+                        _buildTextField(_emailController, 'Email', Icons.email),
+                        const SizedBox(height: 30),
+                        _buildTextField(_passwordController, 'Senha', Icons.lock, isPassword: true),
+                        const SizedBox(height: 30),
+                        _buildTextField(_passwordConfirmController, 'Confirmar senha', Icons.lock, isPassword: true),
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          width: 331,
+                          height: 49,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final name = _nameController.text;
+                              final email = _emailController.text;
+                              final password = _passwordController.text;
+                              final confirmPassword = _passwordConfirmController.text;
+                              final avatarUrl = _avatarController.text;
+
+                              if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Todos os campos devem ser preenchidos'),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (password.length < 8) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Insira uma senha com no mínimo 8 caracteres'),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (password != confirmPassword) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('As senhas não coincidem'),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              try {
+                                await Provider.of<AuthProvider>(context, listen: false)
+                                    .register(name, email, password, avatarUrl);
+
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomePage(),
+                                  ),
+                                );
+                              } catch (error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Falha ao se registrar: $error')),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                // Remove a borda branca
+                                side: BorderSide.none,
+                              ),
+                            ),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF26174C), Color(0xFF5936B2)],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Criar Conta',
+                                  style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          onPressed: () async {
-                            final name = _nameController.text;
-                            final email = _emailController.text;
-                            final password = _passwordController.text;
-                            final confirmPassword = _passwordConfirmController.text;
-                            final avatarUrl = _avatarController.text;
+                        ),
+                        const SizedBox(height: 20),
+                        TextButton(
+                          onPressed: () {
+                            // Navegação para a tela de login usando PageRouteBuilder para animação
+                            Navigator.of(context).push(PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => const Login(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
 
-                            if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty || avatarUrl.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Todos os campos devem ser preenchidos'),
-                                ),
-                              );
-                              return;
-                            }
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var offsetAnimation = animation.drive(tween);
 
-                            if (password.length < 8) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Insira uma senha com no mínimo 8 caracteres'),
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (password != confirmPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('As senhas não coincidem'),
-                                ),
-                              );
-                              return;
-                            }
-
-                            try {
-                              await Provider.of<AuthProvider>(context, listen: false)
-                                  .register(name, email, password, avatarUrl);
-
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ),
-                              );
-                            } catch (error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Falha ao se registrar: $error')),
-                              );
-                            }
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 500),
+                            ));
                           },
-                          child: const Text(
-                            'REGISTRAR',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          child: RichText(
+                            text: const TextSpan(
+                              text: 'Já tem uma conta? ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: "Poppins",
+                                color: Colors.white54,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'LOGIN',
+                                  style: TextStyle(
+                                    color: Color(0xFF7E56E4),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {
-                         Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Login()),
-                         ); 
-                        },
-                        child: const Text(
-                          'Já tem uma conta? Voltar para Login',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ],
@@ -164,26 +199,38 @@ class Cadastro extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String labelText, {bool isPassword = false}) {
+  Widget _buildTextField(TextEditingController controller, String labelText, IconData icon, {bool isPassword = false}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF5936B2).withOpacity(0.2), // Define a mesma cor do campo de login
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: TextField(
         controller: controller,
         obscureText: isPassword,
+        style: const TextStyle(
+          fontFamily: "Poppins",
+          color: Colors.white,
+        ),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: Color.fromARGB(255, 121, 42, 84)),
+          labelStyle: const TextStyle(
+            fontFamily: "Poppins",
+            color: Colors.white70,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0), // Espaçamento
+            child: Icon(icon, color: Colors.white70),
+          ),
+          filled: true,
+          fillColor: const Color(0xFF5936B2).withOpacity(0.2),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
-            borderSide: const BorderSide(color: Color.fromARGB(255, 121, 42, 84), width: 2.0),
+            borderSide: BorderSide.none,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: const BorderSide(color: Color.fromARGB(255, 121, 42, 84), width: 2.0),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
-        style: const TextStyle(color: Color.fromARGB(255, 121, 42, 84)),
       ),
     );
   }

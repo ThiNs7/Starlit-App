@@ -14,7 +14,7 @@ class _SplashScreenIntroState extends State<SplashScreenIntro> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FlutterSplashScreen.scale(
-        backgroundColor: const Color(0xff522258),
+        backgroundColor: const Color(0xff1A0C40),
         childWidget: SizedBox(
           height: 300,
           child: Image.asset("assets/logoCompleta.png"),

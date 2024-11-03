@@ -11,26 +11,26 @@ class SplashScreenIntro extends StatefulWidget {
 }
 
 class _SplashScreenIntroState extends State<SplashScreenIntro> {
-  Image? fundoPrimeiro;
+  Image? fundoLogin;
 
   @override
   void initState() {
     super.initState();
-    fundoPrimeiro = Image.asset('assets/fundoPrimeiro.png');
+    fundoLogin = Image.asset('assets/fundoLogin.png');
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    precacheImage(fundoPrimeiro!.image, context);
+    precacheImage(fundoLogin!.image, context);
   }
   
   @override
   Widget build(BuildContext context) {
-    precacheImage(const AssetImage('assets/fundoPrimeiro'), context);
+    precacheImage(const AssetImage('assets/fundoLogin'), context);
     return Scaffold(
       body: FlutterSplashScreen.scale(
-        backgroundColor: const Color(0xff522258),
+        backgroundColor: const Color.fromARGB(255, 14, 7, 34),
         childWidget: SizedBox(
           height: 300,
           child: Image.asset("assets/logoCompleta.png"),
