@@ -43,17 +43,15 @@ class _CadastroState extends State<Cadastro> {
                 minHeight: MediaQuery.of(context).size.height,
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 80),
-                  Center(
-                    child: Image.asset(
+                mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 100),
+                    Image.asset(
                       'assets/logoCompleta.png',
                       width: 330,
                       height: 330,
                     ),
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(

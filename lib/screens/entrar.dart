@@ -108,18 +108,18 @@ class _EntrarState extends State<Entrar> with SingleTickerProviderStateMixin {
                               height: 50,
                               width: 50,
                             ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              "Descubra o mundo do cinema: compartilhe suas opiniões e encontre novos filmes para amar!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
+                             const SizedBox(height: 30), // Espaço entre logo pequena e o texto
+                          const Text(
+                            "Descubra o mundo do cinema: compartilhe suas opiniões e encontre novos filmes para amar!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
                             ),
-                            const SizedBox(height: 20),
+                          ),
+                          const SizedBox(height: 20), // Espaço entre o texto e o botão
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).push(
@@ -188,7 +188,7 @@ class _EntrarState extends State<Entrar> with SingleTickerProviderStateMixin {
                                   fontFamily: 'Poppins',
                                   color: Color(0XFF7E56E4),
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
