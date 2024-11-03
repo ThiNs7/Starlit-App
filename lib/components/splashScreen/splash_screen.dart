@@ -30,7 +30,7 @@ class _SplashScreenIntroState extends State<SplashScreenIntro> {
     precacheImage(const AssetImage('assets/fundoLogin'), context);
     return Scaffold(
       body: FlutterSplashScreen.scale(
-        backgroundColor: const Color.fromARGB(255, 14, 7, 34),
+        backgroundColor: const Color.fromARGB(255, 48, 24, 112),
         childWidget: SizedBox(
           height: 300,
           child: Image.asset("assets/logoCompleta.png"),

@@ -57,148 +57,150 @@ class _EntrarState extends State<Entrar> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/fundoLogin.png'),
-            fit: BoxFit.cover,
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/fundoLogin.png'),
+              fit: BoxFit.cover, // Ajuste se necessário
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: SlideTransition(
-                position: _topAnimation,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/detalheEntrarWaves.png',
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    Image.asset(
-                      'assets/logoCompleta.png',
-                      width: 330,
-                      height: 330,
-                    ),
-                  ],
+          child: Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: SlideTransition(
+                  position: _topAnimation,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/detalheEntrarWaves.png',
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      Image.asset(
+                        'assets/logoCompleta.png',
+                        width: 330,
+                        height: 330,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _contentAnimation,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/logoSmall.png',
-                            height: 50,
-                            width: 50,
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            "Descubra o mundo do cinema: compartilhe suas opiniões e encontre novos filmes para amar!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _contentAnimation,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              'assets/logoSmall.png',
+                              height: 50,
+                              width: 50,
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => Cadastro(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    const begin = Offset(1.0, 0.0); // Começa da direita
-                                    const end = Offset.zero;
-                                    const curve = Curves.easeInOut;
-
-                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                    var offsetAnimation = animation.drive(tween);
-
-                                    return SlideTransition(
-                                      position: offsetAnimation,
-                                      child: child,
-                                    );
-                                  },
-                                  transitionDuration: const Duration(milliseconds: 800),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF5936B2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                            ),
-                            child: const Text(
-                              'Criar Conta',
+                            const SizedBox(height: 20),
+                            const Text(
+                              "Descubra o mundo do cinema: compartilhe suas opiniões e encontre novos filmes para amar!",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => const Login(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    const begin = Offset(1.0, 0.0); // Começa da direita
-                                    const end = Offset.zero;
-                                    const curve = Curves.easeInOut;
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => Cadastro(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      const begin = Offset(1.0, 0.0); // Começa da direita
+                                      const end = Offset.zero;
+                                      const curve = Curves.easeInOut;
 
-                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                    var offsetAnimation = animation.drive(tween);
+                                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                      var offsetAnimation = animation.drive(tween);
 
-                                    return SlideTransition(
-                                      position: offsetAnimation,
-                                      child: child,
-                                    );
-                                  },
-                                  transitionDuration: const Duration(milliseconds: 800),
+                                      return SlideTransition(
+                                        position: offsetAnimation,
+                                        child: child,
+                                      );
+                                    },
+                                    transitionDuration: const Duration(milliseconds: 800),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF5936B2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                              );
-                            },
-                            child: const Text(
-                              'LOGIN',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Color(0XFF7E56E4),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                              ),
+                              child: const Text(
+                                'Criar Conta',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 20),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => const Login(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      const begin = Offset(1.0, 0.0); // Começa da direita
+                                      const end = Offset.zero;
+                                      const curve = Curves.easeInOut;
+
+                                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                      var offsetAnimation = animation.drive(tween);
+
+                                      return SlideTransition(
+                                        position: offsetAnimation,
+                                        child: child,
+                                      );
+                                    },
+                                    transitionDuration: const Duration(milliseconds: 800),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'LOGIN',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0XFF7E56E4),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
