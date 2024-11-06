@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:starlitfilms/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:starlitfilms/services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
   String? _token;
@@ -9,53 +9,77 @@ class AuthProvider with ChangeNotifier {
   String? _email;
   String? _avatar;
   String? _descricao;
-  List<dynamic> _amigos = []; 
+  List<dynamic> _amigos = [];
   final AuthService _authService = AuthService();
 
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
   String? get descricao => _descricao;
-  List<dynamic> get amigos => _amigos; 
+  List<dynamic> get amigos => _amigos;
 
-  void setAuthToken(String? token) {
+  String get authToken => _token ?? '';
+
+  // Constructor que carrega os dados persistidos ao inicializar o provider
+  AuthProvider() {
+    _loadUserData();
+  }
+
+  // Salva o token de autenticação e os dados relacionados ao usuário no SharedPreferences
+  Future<void> setAuthToken(String? token) async {
     _token = token;
     if (_token != null) {
-      setCredentials(_token!);
+      await _saveAuthToken(_token!);
+      await setCredentials(_token!);
     }
+    notifyListeners();
   }
 
-  String getAuthToken() {
-    return _token ?? '';
+  // Método para salvar o token no SharedPreferences
+  Future<void> _saveAuthToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('authToken', token);
   }
 
+  // Carrega os dados de autenticação armazenados do SharedPreferences
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('authToken');
+    _nome = prefs.getString('nome');
+    _avatar = prefs.getString('avatar');
+    _descricao = prefs.getString('descricao');
+
+    if (_token != null) {
+      await setCredentials(_token!);
+    }
+    notifyListeners();
+  }
+
+  // Atualiza o avatar do usuário e armazena no SharedPreferences
   void updateAvatar(String newAvatarUrl) {
     _avatar = newAvatarUrl;
     notifyListeners();
     _updateUserDetails();
   }
 
+  // Atualiza o nome do usuário e armazena no SharedPreferences
   void updateNome(String newNome) {
     _nome = newNome;
     notifyListeners();
     _updateUserDetails();
   }
 
+  // Atualiza a descrição do usuário
   void updateDescricao(String newDescricao) {
     _descricao = newDescricao;
     notifyListeners();
   }
 
+  // Atualiza os dados do usuário no servidor e salva no SharedPreferences
   Future<void> _updateUserDetails() async {
-    final email = _email;
-    final descricao = _descricao ?? '';
-
-    if (email != null) {
+    if (_email != null) {
       try {
-        
-        await _authService.updateUserDetails(email, _nome ?? '', _avatar ?? '', descricao);
-        
-        
+        await _authService.updateUserDetails(_email!, _nome ?? '', _avatar ?? '', _descricao ?? '');
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('nome', _nome ?? '');
         prefs.setString('avatar', _avatar ?? '');
@@ -66,37 +90,35 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    _nome = prefs.getString('nome');
-    _avatar = prefs.getString('avatar');
-    _descricao = prefs.getString('descricao');
-    notifyListeners();
-  }
-
+  // Recupera as credenciais do usuário a partir do token
   Future<void> setCredentials(String token) async {
     try {
       final responseCredentials = await _authService.verifyAuthentication(token);
       final responseDecoded = responseCredentials['decode'];
-      _nome = responseDecoded['name'].toString();
-      _email = responseDecoded['email'].toString();
-      _avatar = responseDecoded['avatar'].toString();
-      _descricao = responseDecoded['description'].toString();
+      _nome = responseDecoded['name'];
+      _email = responseDecoded['email'];
+      _avatar = responseDecoded['avatar'];
+      _descricao = responseDecoded['description'];
       notifyListeners();
     } catch (err) {
-      print('Falha: $err');
+      print('Falha ao carregar credenciais: $err');
     }
   }
 
-  Map<String, String?> getCredentials() {
-    return {
-      "nome": _nome,
-      "email": _email,
-      "avatar": _avatar,
-      "descricao": _descricao,
-    };
+  // Realiza o login do usuário
+  Future<bool> login(String email, String password) async {
+    try {
+      final responseData = await _authService.login(email, password);
+      final responseDecoded = jsonDecode(responseData);
+      await setAuthToken(responseDecoded['token'].toString());
+      return true;
+    } catch (error) {
+      debugPrint('Erro ao fazer login: $error');
+      rethrow;
+    }
   }
 
+  // Realiza o registro do usuário
   Future<void> register(String nome, String email, String password, String avatar) async {
     try {
       await _authService.register(nome, email, password, avatar);
@@ -108,19 +130,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> login(String email, String password) async {
-    try {
-      final responseData = await _authService.login(email, password);
-      print('Digero ${responseData}');
-      var responseDecoded = jsonDecode(responseData);
-      setAuthToken(responseDecoded['token'].toString());
-      return true;
-    } catch (error) {
-      debugPrint('Erro ao fazer login: $error');
-      rethrow;
-    }
-  }
-
+  // Busca os detalhes do usuário no servidor
   Future<void> fetchUserDetails(String email) async {
     try {
       final userDetails = await _authService.fetchUserDetails(email);
@@ -134,6 +144,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  // Busca os amigos do usuário
   Future<void> fetchFriends() async {
     if (_token != null && _email != null) {
       try {
@@ -146,6 +157,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  // Adiciona um amigo
   Future<void> addFriend(String emailFriend) async {
     if (_token != null && _email != null) {
       try {
@@ -158,6 +170,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  // Remove um amigo
   Future<void> removeFriend(String emailFriend) async {
     if (_token != null && _email != null) {
       try {
@@ -169,19 +182,17 @@ class AuthProvider with ChangeNotifier {
       }
     }
   }
-    void logout() {
+
+  // Realiza o logout, limpando os dados persistidos e a memória
+  Future<void> logout() async {
     _token = null;
     _nome = null;
     _email = null;
     _avatar = null;
     _descricao = null;
     notifyListeners();
-    
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.remove('nome');
-      prefs.remove('avatar');
-      prefs.remove('descricao');
-    });
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();  // Limpa todos os dados no SharedPreferences
   }
 }
-

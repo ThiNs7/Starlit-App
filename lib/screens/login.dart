@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/register.dart';
 import 'package:starlitfilms/screens/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -268,40 +269,32 @@ class _LoginState extends State<Login> {
   }
 
   void _performLogin(String email, String password) async {
-    setState(() {
-      _isLoading = true;
-    });
+  setState(() { _isLoading = true; });
 
-    try {
-      var tryLogin = await Provider.of<AuthProvider>(context, listen: false).login(email, password);
+  try {
+    var tryLogin = await Provider.of<AuthProvider>(context, listen: false).login(email, password);
+    if (tryLogin) {
+      // Armazena o token após o login
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('authToken', Provider.of<AuthProvider>(context, listen: false).authToken);
 
-      if (tryLogin) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login realizado com sucesso!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        await Future.delayed(const Duration(seconds: 2));
-
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
-      }
-    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Falha ao fazer login: $error'),
-          backgroundColor: Colors.red,
-        ),
+        const SnackBar(content: Text('Login realizado com sucesso!'), backgroundColor: Colors.green),
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Falha no login. Tente novamente.'), backgroundColor: Colors.red),
+      );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erro ao fazer login: $e'), backgroundColor: Colors.red),
+    );
+  } finally {
+    setState(() { _isLoading = false; });
   }
+}
 }

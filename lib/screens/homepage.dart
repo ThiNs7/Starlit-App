@@ -1,359 +1,222 @@
 import 'package:flutter/material.dart';
-import 'package:starlitfilms/components/review_form.dart';
-import 'package:starlitfilms/components/slide.dart';
-import 'package:starlitfilms/components/styles.dart';
+import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
-import 'package:starlitfilms/screens/amigos.dart';
-import 'package:starlitfilms/screens/notificacao.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int selectedIndex = 0;
-  PageController _pageController = PageController();
-  List<Review> userReviews = [];
-
-  final AuthProvider _authProvider = AuthProvider();
-
-  void _showReviewForm() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ReviewForm(
-          onSubmit: (review) {
-            setState(() {
-              userReviews.add(review);
-            });
-          },
-          onSuccess: () {},
-        );
-      },
-    );
-  }
+  int _selectedIndex = 0;
+  late NotchBottomBarController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = NotchBottomBarController();
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Navegação para a página de perfil quando o item 'Perfil' (índice 1) for selecionado
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Perfil(email: '',)),  // Navega para a página de perfil
+      );
+    }
+  }
+
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return const Center(child: Text('Página 1'));
+      case 1:
+        return const Center(child: Text('Página 2'));
+      case 2:
+        return const Center(child: Text('Página 3'));
+      default:
+        return const Center(child: Text('Página 1'));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_authProvider.getCredentials());
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 61, 25, 66),
-        toolbarHeight: 90.0,
-        elevation: 50,
-        shadowColor: const Color(0xFF0000),
-        title: Row(
+        toolbarHeight: 100,
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+          child: Image.asset(
+            'assets/logoSmall.png',
+            height: 50,
+            width: 50,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.20),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  'assets/logoSmall.png',
-                  height: 50.0,
-                ),
+            const SizedBox(height: 60),
+            const Text(
+              'StarlitFilms',
+              style: TextStyle(
+                fontFamily: "Poppins",
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w300,
+                letterSpacing: 1,
               ),
             ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.search,
-                        color: Color.fromARGB(255, 61, 25, 66), size: 45),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'type to search',
-                          border: InputBorder.none,
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  Container(
+                    width: 383,
+                    height: 42,
+                    child: TextField(
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color(0xFF35286D).withOpacity(0.5),
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                          child: Icon(Icons.search, color: Colors.white),
                         ),
+                        hintText: 'Choose a Movie',
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Poppins",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 50),
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 30),
+                child: Text(
+                  'Destaques',
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.notifications, color: Colors.white, size: 45),
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) =>  const Notificacao(),
-                                ),
-                              );
-              },
+            const SizedBox(height: 230),
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 30),
+                child: Text(
+                  'Posts Amigos',
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        onPageChanged: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-        children: [
-          _buildFirstPage(),
-          _buildSecondPage(),
-          Perfil(email: ''),
-          AmigosPage(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color.fromARGB(255, 143, 44, 59),
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-            _pageController.jumpToPage(index);
-          });
-        },
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: selectedIndex,
-        iconSize: 80,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30, color: Colors.white),
-            activeIcon: _CircledIcon(icon: Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu, size: 30, color: Colors.white),
-            activeIcon: _CircledIcon(icon: Icons.menu),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 30, color: Colors.white),
-            activeIcon: _CircledIcon(icon: Icons.person),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, size: 30, color: Colors.white),
-            activeIcon: _CircledIcon(icon: Icons.chat),
-            label: '',
-          ),
-        ],
-        selectedIconTheme: const IconThemeData(size: 70),
-        unselectedIconTheme: const IconThemeData(size: 50),
-      ),
-    );
-  }
-
-  Widget _buildFirstPage() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/homeFundo.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Column(
-        children: [
-          const Slide(),
-          Container(
-            child: Image.asset('assets/filmesMaisComentados.png'),
-          ),
-          _buildImageRow(), 
-          Container(
-            child: Image.asset('assets/linha1.png'),
-          ),
-      
-          Expanded(
-            child: ListView.builder(
-              itemCount: userReviews.length,
-              itemBuilder: (context, index) {
-                return _buildCard(userReviews[index]);
-                
-              },
+      extendBody: true,
+      bottomNavigationBar: AnimatedNotchBottomBar(
+        notchBottomBarController: _controller,
+        bottomBarItems: [
+          BottomBarItem(
+            inActiveItem: Image.asset(
+              'assets/home_icon.png',
+              width: 30,
+              height: 30,
             ),
-          ),
-        ],
-      ),
-
-    );
-  }
-  
-  Widget _buildSecondPage() {
-    return Scaffold(
-      backgroundColor: Colors.deepPurple[800],
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/homeFundo.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Text(
-                  "FAÇA UMA REVIEW!",
-                  style: txtSans(30, Colors.white),
-                ),
-              ),
-              const Divider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: userReviews.length,
-                  itemBuilder: (context, index) {
-                    return _buildCard(userReviews[index]);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showReviewForm,
-        backgroundColor: const Color.fromARGB(255, 61, 25, 66),
-        child: const Icon(Icons.add, size: 40, color: Colors.white),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(35),
-        ),
-      ),
-    );
-  }
-  
-  Widget _buildCard(Review review) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  review.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Row(
-                children: List.generate(
-                  5,
-                  (index) => Icon(
-                    index < review.rating ? Icons.star : Icons.star_border,
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            review.description,
-            style: const TextStyle(
-              color: Colors.white,
+            activeItem: Image.asset(
+              'assets/home_icon.png',
+              width: 30,
+              height: 30,
             ),
+            itemLabel: 'Página 1',
+          ),
+          BottomBarItem(
+            inActiveItem: Image.asset(
+              'assets/perfil_icon.png',
+              width: 30,
+              height: 30,
+            ),
+            activeItem: Image.asset(
+              'assets/perfil_icon.png',
+              width: 30,
+              height: 30,
+            ),
+            itemLabel: 'Página 2',
+          ),
+          BottomBarItem(
+            inActiveItem: Image.asset(
+              'assets/amigos_icon.png',
+              width: 50,
+              height: 50,
+            ),
+            activeItem: Image.asset(
+              'assets/amigos_icon.png',
+              width: 50,
+              height: 50,
+            ),
+            itemLabel: 'Página 3',
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildImageRow() {
-    return const Padding(
-      padding:  EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage( 'assets/filmeSlide1.png'),
-            radius: 60,
-          ),
-           SizedBox(width: 20),
-          CircleAvatar(
-            backgroundImage: AssetImage('assets/filmeSlide2.png'),
-            radius: 60,
-          ),
-           SizedBox(width: 20),
-          CircleAvatar(
-            backgroundImage: AssetImage('assets/filmeSlide3.png'),
-            radius: 60,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CircledIcon extends StatelessWidget {
-  final IconData icon;
-
-  const _CircledIcon({super.key, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color:  Color.fromARGB(255, 61, 25, 66),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Icon(
-          icon,
-          size: 30,
+        onTap: _onItemTapped,
+        notchColor: Color(0xFF42326A),
+        showLabel: false,
+        itemLabelStyle: const TextStyle(
           color: Colors.white,
+          fontSize: 16.0,
         ),
+        bottomBarHeight: 70.0, // Adjust the height to make it more prominent
+        elevation: 8.0, // Increased elevation for more prominent effect
+        color: Color(0xff2C2247),
+        durationInMilliSeconds: 300,
+        showBlurBottomBar: false,
+        kBottomRadius: 30,  // Adjust the bottom radius to make it more curved
+        kIconSize: 24, // Adjust icon size for better fit
       ),
     );
   }

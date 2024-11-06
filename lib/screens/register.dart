@@ -123,7 +123,7 @@ class _CadastroState extends State<Cadastro> {
 
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
-                                        builder: (context) => const HomePage(),
+                                        builder: (context) =>  HomePage(),
                                       ),
                                     );
                                   } catch (error) {

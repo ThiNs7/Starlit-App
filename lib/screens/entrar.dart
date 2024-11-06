@@ -138,7 +138,7 @@ class _EntrarState extends State<Entrar> with SingleTickerProviderStateMixin {
                                         child: child,
                                       );
                                     },
-                                    transitionDuration: const Duration(milliseconds: 800),
+                                    transitionDuration: const Duration(milliseconds: 500),
                                   ),
                                 );
                               },
@@ -178,7 +178,7 @@ class _EntrarState extends State<Entrar> with SingleTickerProviderStateMixin {
                                         child: child,
                                       );
                                     },
-                                    transitionDuration: const Duration(milliseconds: 800),
+                                    transitionDuration: const Duration(milliseconds: 500),
                                   ),
                                 );
                               },
