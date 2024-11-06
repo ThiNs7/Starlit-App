@@ -12,8 +12,6 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final authToken = prefs.getString('authToken');
 
-
-
   runApp(MyApp(isLoggedIn: authToken != null));
 }
 
@@ -35,7 +33,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashScreenIntro(),
           '/entrar': (context) => const Entrar(),
           '/biblioteca': (context) => Biblioteca(),
-          '/home': (context) =>  HomePage(),
+          '/home': (context) => HomePage(),
         },
       ),
     );
