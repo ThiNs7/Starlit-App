@@ -1,3 +1,6 @@
+// ignore_for_file: unused_local_variable
+
+import 'dart:ui';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return _homePageContent();
       case 1:
-        return const Perfil();
+        return const Perfil(); // Página de Perfil, onde AppBar será ocultada
       case 2:
         return const Center(child: Text('Página Amigos'));
       default:
@@ -65,7 +68,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   width: 383,
                   height: 42,
                   child: TextField(
@@ -140,20 +143,22 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 100,
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
-          child: Image.asset(
-            'assets/logoSmall.png',
-            height: 50,
-            width: 50,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: _selectedIndex == 1 // Condicional para ocultar a AppBar na página Perfil
+          ? null
+          : AppBar(
+              automaticallyImplyLeading: false,
+              toolbarHeight: 100,
+              title: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                child: Image.asset(
+                  'assets/logoSmall.png',
+                  height: 50,
+                  width: 50,
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
       body: _getPage(_selectedIndex),
       extendBody: true,
       bottomNavigationBar: AnimatedNotchBottomBar(
@@ -203,15 +208,14 @@ class _HomePageState extends State<HomePage> {
         notchColor: const Color(0xFF42326A),
         showLabel: false,
         itemLabelStyle: const TextStyle(
-          color: Colors.white,
           fontSize: 16.0,
         ),
-        bottomBarHeight: 70.0,
+        bottomBarHeight: 20.0,
         elevation: 8.0,
         color: const Color(0xff2C2247),
-        durationInMilliSeconds: 300,
+        durationInMilliSeconds: 200,
         showBlurBottomBar: false,
-        kBottomRadius: 30,
+        kBottomRadius: 40,
         kIconSize: 24,
       ),
     );

@@ -19,6 +19,7 @@ class AuthProvider with ChangeNotifier {
   List<dynamic> get amigos => _amigos;
 
   String get authToken => _token ?? '';
+  String? get email => _email;
 
   // Constructor que carrega os dados persistidos ao inicializar o provider
   AuthProvider() {
