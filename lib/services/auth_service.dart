@@ -8,7 +8,8 @@ class AuthService {
     return Uri.parse('$baseUrl$path');
   }
 
-  Future<void> register(String nome, String email, String password, String avatar) async {
+  // Adicionando username ao método de registro
+  Future<void> register(String nome, String email, String password, String avatar, String username) async {
     final uri = _createUri('/user/register');
 
     final response = await http.post(
@@ -19,6 +20,7 @@ class AuthService {
         'email': email,
         'password': password,
         'avatar': avatar,
+        'username': username,  // Adicionando username no registro
       }),
     );
 
@@ -27,6 +29,7 @@ class AuthService {
     }
   }
 
+  // Modificando o login para também retornar username
   Future<String> login(String email, String password) async {
     print('fabroca');
     final url = _createUri("/user/login");
@@ -39,12 +42,13 @@ class AuthService {
     print('rboerto carlos: ${response}');
 
     if (response.statusCode == 200) {
-      return response.body;
+      return response.body;  // Aqui esperamos que o `username` seja retornado junto com o token
     } else {
       throw Exception('Failed to login: ${response.body}');
     }
   }
 
+  // Modificando a verificação de autenticação para incluir username
   Future<Map<String, dynamic>> verifyAuthentication(String token) async {
     final url = _createUri("/user/verify-auth");
 
@@ -64,19 +68,21 @@ class AuthService {
     }
   }
 
+  // Buscando detalhes do usuário com username
   Future<Map<String, dynamic>> fetchUserDetails(String email) async {
     final url = _createUri("/user/details?email=$email");
 
     final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.body);  // Aqui esperamos que o `username` seja retornado
     } else {
       throw Exception('Failed to fetch user details: ${response.body}');
     }
   }
 
-  Future<void> updateUserDetails(String email, String nome, String avatar, String descricao) async {
+  // Atualizando detalhes do usuário, incluindo o username
+  Future<void> updateUserDetails(String email, String nome, String avatar, String descricao, String username) async {
     final url = _createUri("/user/update");
 
     final response = await http.put(
@@ -90,6 +96,7 @@ class AuthService {
         'name': nome,
         'avatar': avatar,
         'description': descricao,
+        'username': username,  // Incluindo username na atualização
       }),
     );
 
@@ -98,6 +105,7 @@ class AuthService {
     }
   }
 
+  // Função de buscar amigos (sem modificações relacionadas ao username)
   Future<List<dynamic>> fetchFriends(String email, String token) async {
     final uri = _createUri('/friends/buscar');
 
@@ -117,6 +125,7 @@ class AuthService {
     }
   }
 
+  // Função de adicionar amigo
   Future<void> addFriend(String email, String emailFriend, String token) async {
     final uri = _createUri('/friends/adicionar');
 
@@ -137,6 +146,7 @@ class AuthService {
     }
   }
 
+  // Função de remover amigo
   Future<void> removeFriend(String email, String emailFriend, String token) async {
     final uri = _createUri('/friends/remover');
 

@@ -6,6 +6,7 @@ import 'package:starlitfilms/services/auth_service.dart';
 class AuthProvider with ChangeNotifier {
   String? _token;
   String? _nome;
+  String? _username;  // Adicionando username
   String? _email;
   String? _avatar;
   String? _descricao;
@@ -15,6 +16,7 @@ class AuthProvider with ChangeNotifier {
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
+  String? get username => _username;  // Getter para username
   String? get descricao => _descricao;
   List<dynamic> get amigos => _amigos;
 
@@ -47,6 +49,7 @@ class AuthProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('authToken');
     _nome = prefs.getString('nome');
+    _username = prefs.getString('username');  // Carregando o username
     _avatar = prefs.getString('avatar');
     _descricao = prefs.getString('descricao');
 
@@ -70,9 +73,27 @@ class AuthProvider with ChangeNotifier {
     _updateUserDetails();
   }
 
+  // Atualiza o username do usuário
+  void updateUsername(String newUsername) {
+    _username = newUsername;
+    notifyListeners();
+    _updateUserDetails();
+  }
+
   // Atualiza a descrição do usuário
   void updateDescricao(String newDescricao) {
     _descricao = newDescricao;
+    notifyListeners();
+    _updateUserDetails();
+  }
+
+  // Método para salvar as alterações do perfil no SharedPreferences
+  Future<void> saveProfileChanges() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nome', _nome ?? '');
+    await prefs.setString('username', _username ?? '');  // Salvando o username
+    await prefs.setString('avatar', _avatar ?? '');
+    await prefs.setString('descricao', _descricao ?? '');
     notifyListeners();
   }
 
@@ -80,11 +101,9 @@ class AuthProvider with ChangeNotifier {
   Future<void> _updateUserDetails() async {
     if (_email != null) {
       try {
-        await _authService.updateUserDetails(_email!, _nome ?? '', _avatar ?? '', _descricao ?? '');
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('nome', _nome ?? '');
-        prefs.setString('avatar', _avatar ?? '');
-        prefs.setString('descricao', _descricao ?? '');
+        await _authService.updateUserDetails(_email!, _nome ?? '', _avatar ?? '', _descricao ?? '', _username ?? '');
+        // Após atualizar no servidor, salvamos os dados localmente
+        await saveProfileChanges();  // Salva as alterações no perfil
       } catch (error) {
         debugPrint('Erro ao atualizar detalhes do usuário: $error');
       }
@@ -97,6 +116,7 @@ class AuthProvider with ChangeNotifier {
       final responseCredentials = await _authService.verifyAuthentication(token);
       final responseDecoded = responseCredentials['decode'];
       _nome = responseDecoded['name'];
+      _username = responseDecoded['username'];  // Carregando o username
       _email = responseDecoded['email'];
       _avatar = responseDecoded['avatar'];
       _descricao = responseDecoded['description'];
@@ -120,11 +140,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   // Realiza o registro do usuário
-  Future<void> register(String nome, String email, String password, String avatar) async {
+  Future<void> register(String nome, String email, String password, String avatar, String username) async {
     try {
-      await _authService.register(nome, email, password, avatar);
+      await _authService.register(nome, email, password, avatar, username);
       updateAvatar(avatar);
       updateNome(nome);
+      updateUsername(username);  // Salvando o username durante o registro
     } catch (error) {
       debugPrint('Erro ao registrar: $error');
       rethrow;
@@ -136,6 +157,7 @@ class AuthProvider with ChangeNotifier {
     try {
       final userDetails = await _authService.fetchUserDetails(email);
       _nome = userDetails['name'];
+      _username = userDetails['username'];  // Carregando o username
       _avatar = userDetails['avatar'];
       _descricao = userDetails['description'];
       notifyListeners();
@@ -188,6 +210,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> logout() async {
     _token = null;
     _nome = null;
+    _username = null;  // Limpando o username
     _email = null;
     _avatar = null;
     _descricao = null;

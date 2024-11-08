@@ -1,23 +1,23 @@
-// ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
-  
-  
-  class Perfil extends StatefulWidget {
+import 'package:starlitfilms/screens/Perfil/editar_perfil.dart';
+
+class Perfil extends StatefulWidget {
   const Perfil({super.key});
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
-  class _PerfilState extends State<Perfil> {
+class _PerfilState extends State<Perfil> {
   bool isPostsSelected = true; // Inicialmente 'POSTS' selecionado
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Container(
@@ -29,14 +29,15 @@ import 'package:starlitfilms/controllers/authProvider.dart';
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: 2),
           child: Column(
             children: [
+              // Container do perfil com responsividade
               Container(
                 width: double.infinity,
-                height: 400,
-                margin: const EdgeInsets.only(top: 20, left: 5, right: 5, bottom: 5),
-                padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                height: screenHeight * 0.43, // 35% da altura da tela
+                margin: EdgeInsets.only(top: screenHeight * 0.02, left: 5, right: 5, bottom: 5),
+                padding: EdgeInsets.only(top: screenHeight * 0.02, left: 20, right: 20, bottom: 20),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF462F7E), Color(0xFF7E56E4)],
@@ -65,11 +66,11 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                                     ? const Icon(Icons.person, size: 50, color: Colors.white)
                                     : null,
                               ),
-                              const SizedBox(height: 30),
+                              SizedBox(height: screenHeight * 0.05),
                               Text(
                                 authProvider.nome ?? 'Nome do Usuário',
-                                style: const TextStyle(
-                                  fontSize: 36,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.08, // Ajuste proporcional à largura
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -101,7 +102,7 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: screenHeight * 0.03),
                     Text(
                       authProvider.descricao ?? 'Descrição do usuário',
                       style: const TextStyle(
@@ -121,15 +122,22 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                         color: Colors.white60,
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 20,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: 135,
-                          height: 56,
+                          width: screenWidth * 0.33, // 35% da largura da tela
+                          height: screenHeight * 0.05, // 7% da altura da tela
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const EditarPerfil(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff9670F5),
                               shape: RoundedRectangleBorder(
@@ -149,8 +157,8 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                           ),
                         ),
                         SizedBox(
-                          width: 200,
-                          height: 56,
+                          width: screenWidth * 0.45, // 55% da largura da tela
+                          height: screenHeight * 0.05, // 7% da altura da tela
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
@@ -176,12 +184,12 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                   ],
                 ),
               ),
-              const SizedBox(height: 15),
+              SizedBox(height: screenHeight * 0.02), // Espaço entre as seções
 
               // Botão de alternância entre 'POSTS' e 'Favoritos' com AnimatedSwitcher
               Container(
-                width: 300,
-                height: 55,
+                width: screenWidth * 0.8, // 80% da largura da tela
+                height: screenHeight * 0.06, // 8% da altura da tela
                 decoration: BoxDecoration(
                   color: const Color(0xFF000000).withOpacity(0.3),
                   borderRadius: BorderRadius.circular(40),
@@ -193,8 +201,8 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       child: Container(
-                        width: 150, // Metade da largura do contêiner principal
-                        height: 50,
+                        width: screenWidth * 0.4, // 40% da largura da tela
+                        height: screenHeight * 0.06, // 6% da altura da tela
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(40),
@@ -214,7 +222,7 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                               child: Text(
                                 'Posts',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: screenWidth * 0.05, // Ajuste proporcional à largura
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w500,
                                   color: isPostsSelected ? Colors.black : Colors.white,
@@ -234,7 +242,7 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                               child: Text(
                                 'Favoritos',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: screenWidth * 0.05, // Ajuste proporcional à largura
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w500,
                                   color: !isPostsSelected ? Colors.black : Colors.white,
@@ -248,19 +256,17 @@ import 'package:starlitfilms/controllers/authProvider.dart';
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.02), // Espaço abaixo do botão
 
               // Novo botão para criar um post
               if (isPostsSelected) 
                 SizedBox(
-                  width: 360,
-                  height: 40,
+                  width: screenWidth * 0.9, // 90% da largura da tela
+                  height: screenHeight * 0.05, // 6% da altura da tela
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Adicione a ação que deseja quando o botão for pressionado
-                    },
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff9670F5),
+                      backgroundColor: const Color(0xff7E56E4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),

@@ -27,6 +27,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
+        theme: ThemeData(
+            fontFamily: 'Poppins',
+            
+          ),
         debugShowCheckedModeBanner: false,
         initialRoute: isLoggedIn ? '/home' : '/',
         routes: {

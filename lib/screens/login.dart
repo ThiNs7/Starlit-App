@@ -279,10 +279,10 @@ class _LoginState extends State<Login> {
       await prefs.setString('authToken', Provider.of<AuthProvider>(context, listen: false).authToken);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login realizado com sucesso!'), backgroundColor: Colors.green),
+        const SnackBar(content: Text('Login realizado com sucesso!'), backgroundColor: const Color(0xff7E56E4)),
       );
 
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
