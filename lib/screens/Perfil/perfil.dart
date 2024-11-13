@@ -77,7 +77,7 @@ class _PerfilState extends State<Perfil> {
                                 ),
                               ),
                               Text(
-                                '@${authProvider.nome?.toLowerCase() ?? 'username'}',
+                                '@${authProvider.username?.toLowerCase() ?? 'username'}',
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',

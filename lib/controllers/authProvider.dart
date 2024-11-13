@@ -6,7 +6,7 @@ import 'package:starlitfilms/services/auth_service.dart';
 class AuthProvider with ChangeNotifier {
   String? _token;
   String? _nome;
-  String? _username;  // Adicionando username
+  String? _username; 
   String? _email;
   String? _avatar;
   String? _descricao;
@@ -16,7 +16,7 @@ class AuthProvider with ChangeNotifier {
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
-  String? get username => _username;  // Getter para username
+  String? get username => _username; 
   String? get descricao => _descricao;
   List<dynamic> get amigos => _amigos;
 
@@ -38,18 +38,18 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Método para salvar o token no SharedPreferences
+  
   Future<void> _saveAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
   }
 
-  // Carrega os dados de autenticação armazenados do SharedPreferences
+  
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('authToken');
     _nome = prefs.getString('nome');
-    _username = prefs.getString('username');  // Carregando o username
+    _username = prefs.getString('username');
     _avatar = prefs.getString('avatar');
     _descricao = prefs.getString('descricao');
 
@@ -91,7 +91,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> saveProfileChanges() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('nome', _nome ?? '');
-    await prefs.setString('username', _username ?? '');  // Salvando o username
+    await prefs.setString('username', _username ?? ''); 
     await prefs.setString('avatar', _avatar ?? '');
     await prefs.setString('descricao', _descricao ?? '');
     notifyListeners();
@@ -101,9 +101,10 @@ class AuthProvider with ChangeNotifier {
   Future<void> _updateUserDetails() async {
     if (_email != null) {
       try {
-        await _authService.updateUserDetails(_email!, _nome ?? '', _avatar ?? '', _descricao ?? '', _username ?? '');
+        await _authService.updateUserDetails(_email!, _nome ?? '', _username ?? '',
+         _avatar ?? '', _descricao ?? '');
         // Após atualizar no servidor, salvamos os dados localmente
-        await saveProfileChanges();  // Salva as alterações no perfil
+        await saveProfileChanges(); // Salva as alterações no perfil
       } catch (error) {
         debugPrint('Erro ao atualizar detalhes do usuário: $error');
       }
@@ -113,10 +114,11 @@ class AuthProvider with ChangeNotifier {
   // Recupera as credenciais do usuário a partir do token
   Future<void> setCredentials(String token) async {
     try {
-      final responseCredentials = await _authService.verifyAuthentication(token);
+      final responseCredentials =
+          await _authService.verifyAuthentication(token);
       final responseDecoded = responseCredentials['decode'];
       _nome = responseDecoded['name'];
-      _username = responseDecoded['username'];  // Carregando o username
+      _username = responseDecoded['username']; // Carregando o username
       _email = responseDecoded['email'];
       _avatar = responseDecoded['avatar'];
       _descricao = responseDecoded['description'];
@@ -139,25 +141,34 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Realiza o registro do usuário
-  Future<void> register(String nome, String email, String password, String avatar, String username) async {
-    try {
-      await _authService.register(nome, email, password, avatar, username);
-      updateAvatar(avatar);
-      updateNome(nome);
-      updateUsername(username);  // Salvando o username durante o registro
-    } catch (error) {
-      debugPrint('Erro ao registrar: $error');
-      rethrow;
-    }
+Future<void> register(String nome, String username, String email, String password,
+    String avatar) async {
+  try {
+    // Chama o serviço de autenticação para registrar o usuário
+    await _authService.register(nome, username, email, password, avatar);
+
+    // Define os dados do perfil após o registro
+    _nome = nome;
+    _username = username;
+    _avatar = avatar;
+
+    // Persistência dos dados no SharedPreferences
+    await saveProfileChanges();
+
+    notifyListeners();
+  } catch (error) {
+    debugPrint('Erro ao registrar: $error');
+    rethrow;
   }
+}
+
 
   // Busca os detalhes do usuário no servidor
   Future<void> fetchUserDetails(String email) async {
     try {
       final userDetails = await _authService.fetchUserDetails(email);
       _nome = userDetails['name'];
-      _username = userDetails['username'];  // Carregando o username
+      _username = userDetails['username']; // Carregando o username
       _avatar = userDetails['avatar'];
       _descricao = userDetails['description'];
       notifyListeners();
@@ -169,14 +180,14 @@ class AuthProvider with ChangeNotifier {
 
   // Busca os amigos do usuário
   Future<void> fetchFriends() async {
-    if (_token != null && _email != null) {
-      try {
-        _amigos = await _authService.fetchFriends(_email!, _token!);
-        notifyListeners();
-      } catch (error) {
-        debugPrint('Erro ao buscar amigos: $error');
-        rethrow;
-      }
+    print('gpt');
+
+    try {
+      _amigos = await _authService.fetchFriends(_email!, _token!);
+      notifyListeners();
+    } catch (error) {
+      debugPrint('Erro ao buscar amigos: $error');
+      rethrow;
     }
   }
 
@@ -210,13 +221,13 @@ class AuthProvider with ChangeNotifier {
   Future<void> logout() async {
     _token = null;
     _nome = null;
-    _username = null;  // Limpando o username
+    _username = null; // Limpando o username
     _email = null;
     _avatar = null;
     _descricao = null;
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.clear();  // Limpa todos os dados no SharedPreferences
+    prefs.clear(); // Limpa todos os dados no SharedPreferences
   }
 }

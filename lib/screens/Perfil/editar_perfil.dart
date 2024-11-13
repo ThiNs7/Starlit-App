@@ -217,7 +217,7 @@ class _EditarPerfilState extends State<EditarPerfil> with TickerProviderStateMix
                             child: const Text(
                               'Sair',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 color: Color(0xffFE2137),
                               ),
                             ),
@@ -227,7 +227,7 @@ class _EditarPerfilState extends State<EditarPerfil> with TickerProviderStateMix
                         const Text(
                           'Trocar Conta',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             color: Color(0xff7E56E4),
                           ),
                         ),

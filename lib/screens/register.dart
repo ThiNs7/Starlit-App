@@ -60,15 +60,15 @@ class _CadastroState extends State<Cadastro> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _buildTextField(_nameController, 'Nome', Icons.person),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         _buildTextField(_usernameController, 'Username', Icons.account_circle),  // Novo campo
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         _buildTextField(_emailController, 'Email', Icons.email),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         _buildTextField(_passwordController, 'Senha', Icons.lock, isPassword: true),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         _buildTextField(_passwordConfirmController, 'Confirmar senha', Icons.lock, isPassword: true, isConfirm: true),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: Container(

@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late NotchBottomBarController _controller;
   List<Review> userReviews = [];
+  // ignore: unused_field
   final AuthProvider _authProvider = AuthProvider();
 
   void _showReviewForm() {
@@ -263,7 +264,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => AmigosPage(), // Substitua pela sua tela de amigos
+          builder: (_) => const AmigosPage(), // Substitua pela sua tela de amigos
         ),
       );
     });
@@ -278,7 +279,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.purple, // Cor de fundo da splash screen
       body: Center(
         child: Text(
