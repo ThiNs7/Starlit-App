@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starlitfilms/components/splashScreen/splash_screen.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
-import 'package:starlitfilms/screens/biblioteca.dart';
+import 'package:starlitfilms/screens/biblioteca.dart';  // Certifique-se de importar BibliotecaPage
 import 'package:starlitfilms/screens/entrar.dart';
 import 'package:starlitfilms/screens/homepage.dart';
+import 'package:starlitfilms/screens/amigos.dart';  // Certifique-se de importar a página de Amigos
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +37,11 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const SplashScreenIntro(),
           '/entrar': (context) => const Entrar(),
-          '/biblioteca': (context) => Biblioteca(),
+          '/biblioteca': (context) => BibliotecaPage(amigo: ModalRoute.of(context)?.settings.arguments as Amigo),
           '/home': (context) => HomePage(),
         },
       ),
     );
   }
 }
+

@@ -3,9 +3,12 @@
 import 'dart:ui';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:starlitfilms/components/review_form.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
+import 'package:starlitfilms/screens/amigos.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +18,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late NotchBottomBarController _controller;
+  List<Review> userReviews = [];
+  final AuthProvider _authProvider = AuthProvider();
+
+  void _showReviewForm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ReviewForm(
+          onSubmit: (review) {
+            setState(() {
+              userReviews.add(review);
+            });
+          },
+          onSuccess: () {},
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -35,7 +56,7 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return const Perfil(); // Página de Perfil, onde AppBar será ocultada
       case 2:
-        return const Center(child: Text('Página Amigos'));
+        return const AmigosPage();
       default:
         return _homePageContent();
     }
@@ -221,3 +242,51 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+
+    // Ativar modo imersivo (esconde barra de status e navegação)
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
+    // Espera 2 segundos e navega para a tela de amigos
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => AmigosPage(), // Substitua pela sua tela de amigos
+        ),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    // Voltar com as overlays normais
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.purple, // Cor de fundo da splash screen
+      body: Center(
+        child: Text(
+          'Bem-vindo!',
+          style: TextStyle(color: Colors.white, fontSize: 24), // Texto de boas-vindas
+        ),
+      ),
+    );
+  }
+}
+
