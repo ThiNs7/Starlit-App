@@ -7,7 +7,7 @@ class AuthService {
   bool get isAuthenticated => _token != null;
 
   final String baseUrl =
-      "https://3d9dba1f-2b5b-433f-a1b0-eb428d2de251-00-32rrmhyucky1c.worf.replit.dev";
+      "https://8f7414e8-3063-4b51-922b-333c93b2d21a-00-3b27394cfoaqp.riker.replit.dev";
 
   Future<void> register(
       String nome, String email, String password, String avatar) async {
@@ -59,16 +59,16 @@ class AuthService {
     return json.decode(response.body);
   }
 
-  Future<Map<String, dynamic>> fetchUserDetails(String email) async {
-    final url = Uri.parse("$baseUrl/user/details?email=$email");
+//   Future<Map<String, dynamic>> fetchUserDetails(String email) async {
+//     final url = Uri.parse("$baseUrl/user/details?email=$email");
 
-    final response =
-        await http.get(url, headers: {'Content-Type': 'application/json'});
+//     final response =
+//         await http.get(url, headers: {'Content-Type': 'application/json'});
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to fetch user details: ${response.body}');
-    }
-  }
+//     if (response.statusCode == 200) {
+//       return json.decode(response.body);
+//     } else {
+//       throw Exception('Failed to fetch user details: ${response.body}');
+//     }
+//   }
 }

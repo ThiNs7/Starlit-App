@@ -13,8 +13,12 @@ class AuthProvider with ChangeNotifier {
 
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
-  String? get nome => _nome;
-  String? get descricao => _descricao;  
+  String? get name => _nome;
+  String? get email => _email;
+
+  get descricao => null;
+
+  get nome => null;  
 
   void setAuthToken(String token) {
     _token = token;
@@ -87,16 +91,5 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchUserDetails(String email) async {
-    try {
-      final userDetails = await _authService.fetchUserDetails(email);
-      _nome = userDetails['name'];
-      _avatar = userDetails['avatar'];
-      _descricao = userDetails['description']; 
-      notifyListeners();
-    } catch (error) {
-      debugPrint('Erro ao buscar detalhes do usuário: $error');
-      rethrow;
-    }
-  }
+  
 }

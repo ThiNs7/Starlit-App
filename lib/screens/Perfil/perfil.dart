@@ -17,13 +17,8 @@ class _PerfilState extends State<Perfil> {
   @override
   void initState() {
     super.initState();
-    _loadUserDetails();
-  }
+    ;  }
 
-  Future<void> _loadUserDetails() async {
-    await Provider.of<AuthProvider>(context, listen: false).fetchUserDetails(widget.email);
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {

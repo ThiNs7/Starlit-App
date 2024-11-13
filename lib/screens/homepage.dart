@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:starlitfilms/components/review_form.dart';
 import 'package:starlitfilms/components/slide.dart';
 import 'package:starlitfilms/components/styles.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
-import 'package:starlitfilms/screens/amigos.dart';
+import 'package:starlitfilms/screens/amigos.dart'; 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
   List<Review> userReviews = [];
-
   final AuthProvider _authProvider = AuthProvider();
 
   void _showReviewForm() {
@@ -109,6 +109,7 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: selectedIndex,
         children: [
+          // Página inicial
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -139,6 +140,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+          // Página de menu
           Scaffold(
             backgroundColor: Colors.deepPurple[800],
             body: Container(
@@ -183,10 +185,12 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          // Página de perfil
           Perfil(
             email: '',
-          ), // Exibindo a página Perfil
-          AmigosPage()
+          ),
+          // Página de amigos
+          AmigosPage(), // Página de amigos
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -215,7 +219,7 @@ class _HomePageState extends State<HomePage> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat, size: 30, color: Colors.white),
+            icon: Icon(Icons.chat, size: 30, color: Colors.white), // Ícone de chat
             label: '',
           ),
         ],
@@ -283,3 +287,51 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+
+    // Ativar modo imersivo (esconde barra de status e navegação)
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
+    // Espera 2 segundos e navega para a tela de amigos
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => AmigosPage(), // Substitua pela sua tela de amigos
+        ),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    // Voltar com as overlays normais
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.purple, // Cor de fundo da splash screen
+      body: Center(
+        child: Text(
+          'Bem-vindo!',
+          style: TextStyle(color: Colors.white, fontSize: 24), // Texto de boas-vindas
+        ),
+      ),
+    );
+  }
+}
+
