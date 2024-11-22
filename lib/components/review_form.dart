@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:starlitfilms/components/styles.dart';
 
 class Review {
   final String title;
   final String description;
   final int rating;
   final String imagePath;
-  bool isPublic; 
+  bool isPublic;
 
   Review({
     required this.title,
     required this.description,
     required this.rating,
     required this.imagePath,
-    this.isPublic = true, 
+    this.isPublic = true,
   });
-
-  get imageUrl => null;
 }
 
 class ReviewForm extends StatefulWidget {
   final Function(Review) onSubmit;
+  final Review? existingReview;
 
-  const ReviewForm({Key? key, required this.onSubmit, required Null Function() onSuccess}) : super(key: key);
+  const ReviewForm({
+    Key? key,
+    required this.onSubmit,
+    this.existingReview,
+  }) : super(key: key);
 
   @override
   _ReviewFormState createState() => _ReviewFormState();
@@ -35,10 +37,31 @@ class _ReviewFormState extends State<ReviewForm> {
   double _rating = 1.0;
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.existingReview != null) {
+      _titleController.text = widget.existingReview!.title;
+      _descriptionController.text = widget.existingReview!.description;
+      _rating = widget.existingReview!.rating.toDouble();
+    }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.black.withOpacity(0.6),
-      title: const Text('Adicionar Review', style: TextStyle(color: Colors.white)),
+      title: Text(
+        widget.existingReview == null ? 'Adicionar Review' : 'Editar Review',
+        style: const TextStyle(color: Colors.white),
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -71,13 +94,12 @@ class _ReviewFormState extends State<ReviewForm> {
             ),
             const SizedBox(height: 10),
             RatingBar.builder(
-              initialRating: 1,
+              initialRating: _rating,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,
               itemCount: 5,
               itemSize: 30,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               itemBuilder: (context, _) => const Icon(
                 Icons.star,
                 color: Colors.redAccent,
@@ -102,24 +124,26 @@ class _ReviewFormState extends State<ReviewForm> {
           onPressed: () {
             if (_titleController.text.isNotEmpty &&
                 _descriptionController.text.isNotEmpty) {
-              widget.onSubmit(
-                Review(
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  imagePath: 'assets/new_movie.jpg', 
-                  rating: _rating.toInt(),
-                ),
+              final review = Review(
+                title: _titleController.text,
+                description: _descriptionController.text,
+                imagePath: widget.existingReview?.imagePath ??
+                    'assets/new_movie.jpg',
+                rating: _rating.toInt(),
+                isPublic: widget.existingReview?.isPublic ?? true,
               );
+
+              widget.onSubmit(review);
               Navigator.of(context).pop();
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 121, 42, 84), 
+            backgroundColor: const Color.fromARGB(255, 121, 42, 84),
           ),
           child: Text(
-                  "Salvar",
-                   style: txtSans(16, Colors.white),
-           ),
+            widget.existingReview == null ? "Salvar" : "Atualizar",
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );

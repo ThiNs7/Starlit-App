@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
@@ -29,15 +31,28 @@ class _PerfilState extends State<Perfil> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: 2),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: 2,
+          ),
           child: Column(
             children: [
               // Container do perfil com responsividade
               Container(
                 width: double.infinity,
-                height: screenHeight * 0.43, // 35% da altura da tela
-                margin: EdgeInsets.only(top: screenHeight * 0.02, left: 5, right: 5, bottom: 5),
-                padding: EdgeInsets.only(top: screenHeight * 0.02, left: 20, right: 20, bottom: 20),
+                height: screenHeight * 0.43,
+                margin: EdgeInsets.only(
+                  top: screenHeight * 0.02,
+                  left: 5,
+                  right: 5,
+                  bottom: 5,
+                ),
+                padding: EdgeInsets.only(
+                  top: screenHeight * 0.02,
+                  left: 20,
+                  right: 20,
+                  bottom: 20,
+                ),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF462F7E), Color(0xFF7E56E4)],
@@ -54,38 +69,26 @@ class _PerfilState extends State<Perfil> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CircleAvatar(
-                                radius: 40,
-                                backgroundImage: authProvider.avatar != null
-                                    ? NetworkImage(authProvider.avatar!)
-                                    : null,
-                                child: authProvider.avatar == null
-                                    ? const Icon(Icons.person, size: 50, color: Colors.white)
-                                    : null,
-                              ),
-                              SizedBox(height: screenHeight * 0.05),
-                              Text(
-                                authProvider.nome ?? 'Nome do Usuário',
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.08, // Ajuste proporcional à largura
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage: authProvider.avatar != null
+                                      ? NetworkImage(authProvider.avatar!)
+                                      : null,
+                                  child: authProvider.avatar == null
+                                      ? const Icon(
+                                          Icons.person,
+                                          size: 50,
+                                          color: Colors.white,
+                                        )
+                                      : null,
                                 ),
-                              ),
-                              Text(
-                                '@${authProvider.username?.toLowerCase() ?? 'username'}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
+                                SizedBox(height: screenHeight * 0.05),
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 15),
@@ -100,6 +103,26 @@ class _PerfilState extends State<Perfil> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    Text(
+                      authProvider.nome ?? 'Nome do Usuário',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.08,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '@${authProvider.username?.toLowerCase() ?? 'username'}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white70,
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.03),
@@ -122,13 +145,13 @@ class _PerfilState extends State<Perfil> {
                         color: Colors.white60,
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: screenWidth * 0.33, // 35% da largura da tela
-                          height: screenHeight * 0.05, // 7% da altura da tela
+                          width: screenWidth * 0.33,
+                          height: screenHeight * 0.05,
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -157,8 +180,8 @@ class _PerfilState extends State<Perfil> {
                           ),
                         ),
                         SizedBox(
-                          width: screenWidth * 0.45, // 55% da largura da tela
-                          height: screenHeight * 0.05, // 7% da altura da tela
+                          width: screenWidth * 0.45,
+                          height: screenHeight * 0.05,
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
@@ -184,12 +207,12 @@ class _PerfilState extends State<Perfil> {
                   ],
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02), // Espaço entre as seções
+              SizedBox(height: screenHeight * 0.02),
 
-              // Botão de alternância entre 'POSTS' e 'Favoritos' com AnimatedSwitcher
+              // Botão de alternância entre 'POSTS' e 'Favoritos'
               Container(
-                width: screenWidth * 0.8, // 80% da largura da tela
-                height: screenHeight * 0.06, // 8% da altura da tela
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.06,
                 decoration: BoxDecoration(
                   color: const Color(0xFF000000).withOpacity(0.3),
                   borderRadius: BorderRadius.circular(40),
@@ -201,8 +224,8 @@ class _PerfilState extends State<Perfil> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       child: Container(
-                        width: screenWidth * 0.4, // 40% da largura da tela
-                        height: screenHeight * 0.06, // 6% da altura da tela
+                        width: screenWidth * 0.4,
+                        height: screenHeight * 0.06,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(40),
@@ -222,7 +245,7 @@ class _PerfilState extends State<Perfil> {
                               child: Text(
                                 'Posts',
                                 style: TextStyle(
-                                  fontSize: screenWidth * 0.05, // Ajuste proporcional à largura
+                                  fontSize: screenWidth * 0.05,
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w500,
                                   color: isPostsSelected ? Colors.black : Colors.white,
@@ -242,7 +265,7 @@ class _PerfilState extends State<Perfil> {
                               child: Text(
                                 'Favoritos',
                                 style: TextStyle(
-                                  fontSize: screenWidth * 0.05, // Ajuste proporcional à largura
+                                  fontSize: screenWidth * 0.05,
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w500,
                                   color: !isPostsSelected ? Colors.black : Colors.white,
@@ -256,15 +279,22 @@ class _PerfilState extends State<Perfil> {
                   ],
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02), // Espaço abaixo do botão
+              SizedBox(height: screenHeight * 0.02),
 
-              // Novo botão para criar um post
-              if (isPostsSelected) 
+              // Botão para criar novo post
+              if (isPostsSelected)
                 SizedBox(
-                  width: screenWidth * 0.9, // 90% da largura da tela
-                  height: screenHeight * 0.05, // 6% da altura da tela
+                  width: screenWidth * 0.9,
+                  height: screenHeight * 0.05,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => _buildNewPostModal(context),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff7E56E4),
                       shape: RoundedRectangleBorder(
@@ -305,10 +335,9 @@ class _PerfilState extends State<Perfil> {
         Text(
           label,
           style: const TextStyle(
-            color: Colors.white60,
-            fontSize: 14,
+            color: Colors.white70,
+            fontSize: 12,
             fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -317,10 +346,169 @@ class _PerfilState extends State<Perfil> {
 
   Widget _verticalDivider() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
       width: 1,
       height: 40,
-      color: Colors.white54,
+      color: Colors.white70,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
     );
   }
+
+Widget _buildNewPostModal(BuildContext context) {
+  final screenHeight = MediaQuery.of(context).size.height;
+  final screenWidth = MediaQuery.of(context).size.width;
+
+  int starRating = 0; // Controle para a avaliação com estrelas
+  bool isPublic = true; // Controle para visibilidade (Público/Privado)
+
+  return StatefulBuilder(
+    builder: (context, setModalState) {
+      return Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Título
+            const Text(
+              'Criar Novo Post',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Campo para selecionar o nome do filme
+            DropdownButtonFormField<String>(
+              style: const TextStyle(color: Colors.white),
+              dropdownColor: const Color(0xFF3A267F),
+              decoration: InputDecoration(
+                hintText: 'Selecione o filme',
+                hintStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: const Color(0xFF3A267F),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              items: ['Filme 1', 'Filme 2', 'Filme 3']
+                  .map((filme) => DropdownMenuItem(
+                        value: filme,
+                        child: Text(
+                          filme,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                // Lógica para salvar o nome do filme selecionado
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Campo para escrever o post
+            TextFormField(
+              maxLines: 3,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'Escreva algo...',
+                hintStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: const Color(0xFF3A267F),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Avaliação com estrelas e visibilidade
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Ícone de visibilidade
+                IconButton(
+                  icon: Icon(
+                    isPublic
+                        ? Icons.visibility // Ícone de olho (público)
+                        : Icons.visibility_off, // Ícone de olho com risco (privado)
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    // Alterna entre público e privado
+                    setModalState(() {
+                      isPublic = !isPublic;
+                    });
+                  },
+                ),
+                const SizedBox(width: 10), // Espaço menor entre ícone e estrelas
+
+                // Avaliação com estrelas (estreitando espaço e mudando cor)
+                Row(
+                  children: List.generate(5, (index) {
+                    return IconButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 5), // Espaçamento reduzido
+                      icon: Icon(
+                        Icons.star,
+                        color: index < starRating ? Colors.pinkAccent : Colors.grey,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        // Atualiza a avaliação com estrelas
+                        setModalState(() {
+                          starRating = index + 1;
+                        });
+                      },
+                    );
+                  }),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Botão de publicar (tamanho aumentado)
+            ElevatedButton(
+              onPressed: () {
+                // Lógica para salvar o post aqui
+                print("Visibilidade: ${isPublic ? 'Público' : 'Privado'}");
+                print("Nota: $starRating estrelas");
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff7E56E4),
+                minimumSize: Size(double.infinity, screenHeight * 0.07), // Altura ajustada
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 10,
+              ),
+              child: const Text(
+                'Publicar',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 }
