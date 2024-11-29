@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, dead_code
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -352,162 +352,169 @@ class _PerfilState extends State<Perfil> {
       margin: const EdgeInsets.symmetric(horizontal: 8),
     );
   }
-
+  
 Widget _buildNewPostModal(BuildContext context) {
+  final authProvider = Provider.of<AuthProvider>(context);
   final screenHeight = MediaQuery.of(context).size.height;
   final screenWidth = MediaQuery.of(context).size.width;
 
   int starRating = 0; // Controle para a avaliação com estrelas
   bool isPublic = true; // Controle para visibilidade (Público/Privado)
+  String? selectedMovie; // Para armazenar o filme selecionado
 
-  return StatefulBuilder(
-    builder: (context, setModalState) {
-      return Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+  // Verifica se a lista de filmes está vazia ou nula e, se estiver, exibe uma mensagem padrão.
+  final filmes = authProvider.filmes.isNotEmpty ? authProvider.filmes : null;
+
+  return Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+    ),
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Criar Novo Post',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
         ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Título
-            const Text(
-              'Criar Novo Post',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 20),
+        const SizedBox(height: 20),
 
-            // Campo para selecionar o nome do filme
-            DropdownButtonFormField<String>(
-              style: const TextStyle(color: Colors.white),
-              dropdownColor: const Color(0xFF3A267F),
-              decoration: InputDecoration(
-                hintText: 'Selecione o filme',
-                hintStyle: const TextStyle(color: Colors.white70),
-                filled: true,
-                fillColor: const Color(0xFF3A267F),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
+        // Campo para selecionar o nome do filme
+        DropdownButtonFormField<String>(
+          style: const TextStyle(color: Colors.white),
+          dropdownColor: const Color(0xFF3A267F),
+          decoration: InputDecoration(
+            hintText: 'Selecione o filme',
+            hintStyle: const TextStyle(color: Colors.white70),
+            filled: true,
+            fillColor: const Color(0xFF3A267F),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide.none,
+            ),
+          ),
+          items: filmes != null
+              ? filmes.map<DropdownMenuItem<String>>((filme) => DropdownMenuItem<String>(
+                    value: filme['title'], // Certifique-se de que o valor é uma String
+                    child: Text(
+                      filme['title'],
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  )).toList()
+              : [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('Nenhum filme disponível'),
+                  ),
+                ],
+          onChanged: (value) {
+            setState(() {
+              selectedMovie = value;
+            });
+          },
+        ),
+        const SizedBox(height: 20),
+
+        // Campo para escrever o post
+        TextFormField(
+          maxLines: 3,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'Escreva algo...',
+            hintStyle: const TextStyle(color: Colors.white70),
+            filled: true,
+            fillColor: const Color(0xFF3A267F),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Avaliação com estrelas e visibilidade
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(
+                isPublic ? Icons.visibility : Icons.visibility_off,
+                color: isPublic ? Colors.white : Colors.grey,
+                size: 30,
               ),
-              items: ['Filme 1', 'Filme 2', 'Filme 3']
-                  .map((filme) => DropdownMenuItem(
-                        value: filme,
-                        child: Text(
-                          filme,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                // Lógica para salvar o nome do filme selecionado
+              onPressed: () {
+                setState(() {
+                  isPublic = !isPublic;
+                });
               },
             ),
-            const SizedBox(height: 20),
-
-            // Campo para escrever o post
-            TextFormField(
-              maxLines: 3,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Escreva algo...',
-                hintStyle: const TextStyle(color: Colors.white70),
-                filled: true,
-                fillColor: const Color(0xFF3A267F),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Avaliação com estrelas e visibilidade
+            const SizedBox(width: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Ícone de visibilidade
-                IconButton(
+              children: List.generate(5, (index) {
+                return IconButton(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   icon: Icon(
-                    isPublic
-                        ? Icons.visibility // Ícone de olho (público)
-                        : Icons.visibility_off, // Ícone de olho com risco (privado)
-                    color: Colors.white,
+                    Icons.star,
+                    color: index < starRating ? const Color(0xff7E56E4) : Colors.grey,
                     size: 30,
                   ),
                   onPressed: () {
-                    // Alterna entre público e privado
-                    setModalState(() {
-                      isPublic = !isPublic;
+                    setState(() {
+                      starRating = index + 1;
                     });
                   },
-                ),
-                const SizedBox(width: 10), // Espaço menor entre ícone e estrelas
-
-                // Avaliação com estrelas (estreitando espaço e mudando cor)
-                Row(
-                  children: List.generate(5, (index) {
-                    return IconButton(
-                      padding: const EdgeInsets.symmetric(horizontal: 5), // Espaçamento reduzido
-                      icon: Icon(
-                        Icons.star,
-                        color: index < starRating ? Colors.pinkAccent : Colors.grey,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        // Atualiza a avaliação com estrelas
-                        setModalState(() {
-                          starRating = index + 1;
-                        });
-                      },
-                    );
-                  }),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Botão de publicar (tamanho aumentado)
-            ElevatedButton(
-              onPressed: () {
-                // Lógica para salvar o post aqui
-                print("Visibilidade: ${isPublic ? 'Público' : 'Privado'}");
-                print("Nota: $starRating estrelas");
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff7E56E4),
-                minimumSize: Size(double.infinity, screenHeight * 0.07), // Altura ajustada
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                elevation: 10,
-              ),
-              child: const Text(
-                'Publicar',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+                );
+              }),
             ),
           ],
         ),
-      );
-    },
+        const SizedBox(height: 20),
+
+        ElevatedButton(
+          onPressed: () {
+            if (selectedMovie != null) {
+              // Lógica para salvar o post aqui
+              print("Visibilidade: ${isPublic ? 'Público' : 'Privado'}");
+              print("Nota: $starRating estrelas");
+              print("Filme: $selectedMovie");
+              Navigator.pop(context);
+            } else {
+              // Exibir uma mensagem de erro se nenhum filme for selecionado
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Por favor, selecione um filme.')),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff7E56E4),
+            minimumSize: Size(double.infinity, screenHeight * 0.07),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            elevation: 10,
+          ),
+          child: const Text(
+            'Publicar',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

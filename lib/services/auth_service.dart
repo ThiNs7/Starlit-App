@@ -8,7 +8,7 @@ class AuthService {
     return Uri.parse('$baseUrl$path');
   }
 
-  // Adicionando username ao método de registro
+  // Registro de um novo usuário
   Future<void> register(String nome, String email, String password, String avatar, String username) async {
     final uri = _createUri('/user/register');
 
@@ -20,7 +20,7 @@ class AuthService {
         'email': email,
         'password': password,
         'avatar': avatar,
-        'username': username,  // Adicionando username no registro
+        'username': username,
       }),
     );
 
@@ -29,26 +29,24 @@ class AuthService {
     }
   }
 
-  // Modificando o login para também retornar username
+  // Login do usuário que também retorna o corpo da resposta
   Future<String> login(String email, String password) async {
-    print('fabroca');
     final url = _createUri("/user/login");
-    print('Tecnica');
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'email': email, 'password': password}),
     );
-    print('rboerto carlos: ${response}');
 
     if (response.statusCode == 200) {
-      return response.body;  // Aqui esperamos que o `username` seja retornado junto com o token
+      return response.body;
     } else {
       throw Exception('Failed to login: ${response.body}');
     }
   }
 
-  // Modificando a verificação de autenticação para incluir username
+  // Verificação de autenticação para validar o token
   Future<Map<String, dynamic>> verifyAuthentication(String token) async {
     final url = _createUri("/user/verify-auth");
 
@@ -62,27 +60,26 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       return json.decode(response.body);
     } else {
       throw Exception('Failed to verify authentication: ${response.body}');
     }
   }
 
-  // Buscando detalhes do usuário com username
+  // Busca os detalhes do usuário com base no email
   Future<Map<String, dynamic>> fetchUserDetails(String email) async {
     final url = _createUri("/user/details?email=$email");
 
     final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);  // Aqui esperamos que o `username` seja retornado
+      return json.decode(response.body);
     } else {
       throw Exception('Failed to fetch user details: ${response.body}');
     }
   }
 
-  // Atualizando detalhes do usuário, incluindo o username
+  // Atualiza os detalhes do usuário incluindo nome, avatar, descrição e username
   Future<void> updateUserDetails(String email, String nome, String avatar, String descricao, String username) async {
     final url = _createUri("/user/update");
 
@@ -97,7 +94,7 @@ class AuthService {
         'name': nome,
         'avatar': avatar,
         'description': descricao,
-        'username': username,  // Incluindo username na atualização
+        'username': username,
       }),
     );
 
@@ -106,7 +103,7 @@ class AuthService {
     }
   }
 
-  // Função de buscar amigos (sem modificações relacionadas ao username)
+  // Busca a lista de amigos de um usuário
   Future<List<dynamic>> fetchFriends(String email, String token) async {
     final uri = _createUri('/friends/buscar');
 
@@ -120,13 +117,13 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      return json.decode(response.body); // Retorna a lista de amigos
+      return json.decode(response.body);
     } else {
       throw Exception('Failed to fetch friends: ${response.body}');
     }
   }
 
-  // Função de adicionar amigo
+  // Adiciona um novo amigo à lista do usuário
   Future<void> addFriend(String email, String emailFriend, String token) async {
     final uri = _createUri('/friends/adicionar');
 
@@ -147,7 +144,7 @@ class AuthService {
     }
   }
 
-  // Função de remover amigo
+  // Remove um amigo da lista do usuário
   Future<void> removeFriend(String email, String emailFriend, String token) async {
     final uri = _createUri('/friends/remover');
 
@@ -165,6 +162,105 @@ class AuthService {
 
     if (response.statusCode != 200) {
       throw Exception('Failed to remove friend: ${response.body}');
+    }
+  }
+
+  // Método para publicar uma review
+  Future<void> publishReview(String userEmail, String reviewText, int rating, String token) async {
+    final url = _createUri('/Review');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'userEmail': userEmail,
+        'reviewText': reviewText,
+        'rating': rating,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to publish review: ${response.body}');
+    }
+  }
+
+  // Método para apagar uma review
+  Future<void> deleteReview(String reviewId, String token) async {
+    final url = _createUri('/reviews/$reviewId');
+
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete review: ${response.body}');
+    }
+  }
+
+  // Método para editar uma review
+  Future<void> editReview(String reviewId, String reviewText, int rating, String token) async {
+    final url = _createUri('/reviews/$reviewId');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'reviewText': reviewText,
+        'rating': rating,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to edit review: ${response.body}');
+    }
+  }
+
+  // Método para comentar uma review
+  Future<void> commentReview(String reviewId, String commentText, String token) async {
+    final url = _createUri('/reviews/$reviewId/comment');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'commentText': commentText,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to comment on review: ${response.body}');
+    }
+  }
+
+  // Método para buscar filmes
+  Future<List<dynamic>> fetchFilmes(String token) async {
+    final uri = _createUri('/buscarFilmes');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch filmes: ${response.body}');
     }
   }
 }
