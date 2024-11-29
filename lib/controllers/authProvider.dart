@@ -12,17 +12,18 @@ class AuthProvider with ChangeNotifier {
   String? _avatar;
   String? _descricao;
   List<dynamic> _amigos = [];
-  List<dynamic> _filmes = []; 
+  List<dynamic> _reviews = [];
+  List<dynamic> _filmes = [];
   final AuthService _authService = AuthService();
 
-  
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
   String? get username => _username;
   String? get descricao => _descricao;
   List<dynamic> get amigos => _amigos;
-  List<dynamic> get filmes => _filmes; 
+  List<dynamic> get reviews => _reviews;
+  List<dynamic> get filmes => _filmes;
   String get authToken => _token ?? '';
   String? get email => _email;
 
@@ -36,6 +37,13 @@ class AuthProvider with ChangeNotifier {
     try {
       final responseData = await _authService.login(email, password);
       final responseDecoded = jsonDecode(responseData);
+      print('vbokfsg ${responseDecoded['usuario']}');
+      await fetchUserDetails(responseDecoded['usuario']);
+      print('bal ${_nome}');
+      print('bal ${_email}');
+      print('bal ${_avatar}');
+      print('bal ${_descricao}');
+      print('bal ${_token}');
       await setAuthToken(responseDecoded['token'].toString());
       return true;
     } catch (error) {
@@ -75,9 +83,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   // === Perfil ===
-  Future<void> fetchUserDetails(String email) async {
+  Future<void> fetchUserDetails(String username) async {
     try {
-      final userDetails = await _authService.fetchUserDetails(email);
+      final userDetails = await _authService.fetchUserDetails(username);
+      await fetchFriends(username);
       _nome = userDetails['name'];
       _username = userDetails['username'];
       _avatar = userDetails['avatar'];
@@ -140,12 +149,21 @@ class AuthProvider with ChangeNotifier {
   }
 
   // === Amigos ===
-  Future<void> fetchFriends() async {
+  Future<void> fetchFriends(String username) async {
     try {
-      _amigos = await _authService.fetchFriends(_email!, _token!);
+      _amigos = await _authService.fetchFriends(username!);
       notifyListeners();
     } catch (error) {
       debugPrint('Erro ao buscar amigos: $error');
+      rethrow;
+    }
+  }
+  Future<void> fetchReviews(String username) async {
+    try {
+      _reviews = await _authService.fetchReviews(username);
+      notifyListeners();
+    } catch (error) {
+      debugPrint('Erro ao buscar reviews: $error');
       rethrow;
     }
   }
@@ -154,7 +172,7 @@ class AuthProvider with ChangeNotifier {
     if (_token != null && _email != null) {
       try {
         await _authService.addFriend(_email!, emailFriend, _token!);
-        await fetchFriends();
+        await fetchFriends(_username!);
       } catch (error) {
         debugPrint('Erro ao adicionar amigo: $error');
         rethrow;
@@ -166,7 +184,7 @@ class AuthProvider with ChangeNotifier {
     if (_token != null && _email != null) {
       try {
         await _authService.removeFriend(_email!, emailFriend, _token!);
-        await fetchFriends();
+        await fetchFriends(_username!);
       } catch (error) {
         debugPrint('Erro ao remover amigo: $error');
         rethrow;
@@ -175,24 +193,24 @@ class AuthProvider with ChangeNotifier {
   }
 
   // === Filmes ===
- Future<void> fetchFilmes() async {
-  if (_token == null) {
-    throw Exception('Usuário não está autenticado!');
+  Future<void> fetchFilmes() async {
+    if (_token == null) {
+      throw Exception('Usuário não está autenticado!');
+    }
+
+    try {
+      // Realiza a requisição para buscar os filmes
+      _filmes = await _authService.fetchFilmes(_token!);
+
+      // Exibe os filmes recebidos no console
+      debugPrint('Filmes recebidos: $_filmes');
+
+      notifyListeners();
+    } catch (error) {
+      print('Erro ao buscar filmes: $error');
+      rethrow;
+    }
   }
-
-  try {
-    // Realiza a requisição para buscar os filmes
-    _filmes = await _authService.fetchFilmes(_token!); 
-
-    // Exibe os filmes recebidos no console
-    debugPrint('Filmes recebidos: $_filmes');
-
-    notifyListeners();
-  } catch (error) {
-    print('Erro ao buscar filmes: $error');
-    rethrow;
-  }
-}
 
   // === Avaliações ===
   Future<void> publishReview(String reviewText, int rating) async {

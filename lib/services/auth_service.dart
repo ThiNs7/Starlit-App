@@ -67,10 +67,13 @@ class AuthService {
   }
 
   // Busca os detalhes do usuário com base no email
-  Future<Map<String, dynamic>> fetchUserDetails(String email) async {
-    final url = _createUri("/user/details?email=$email");
+  Future<Map<String, dynamic>> fetchUserDetails(String username) async {
+    final url = _createUri("/user/detalhes-usuario");
 
-    final response = await http.get(url, headers: {'Content-Type': 'application/json'});
+    print('pra te dmonari ${username}');
+    final response = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
+      'username': username 
+    }));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -79,7 +82,7 @@ class AuthService {
     }
   }
 
-  // Atualiza os detalhes do usuário incluindo nome, avatar, descrição e username
+  
   Future<void> updateUserDetails(String email, String nome, String avatar, String descricao, String username) async {
     final url = _createUri("/user/update");
 
@@ -87,7 +90,7 @@ class AuthService {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer YOUR_TOKEN_HERE', // Atualize para usar o token correto
+        'Authorization': 'Bearer YOUR_TOKEN_HERE',
       },
       body: json.encode({
         'email': email,
@@ -104,22 +107,44 @@ class AuthService {
   }
 
   // Busca a lista de amigos de um usuário
-  Future<List<dynamic>> fetchFriends(String email, String token) async {
-    final uri = _createUri('/friends/buscar');
+  Future<List<dynamic>> fetchFriends(String username) async {
+    final uri = _createUri('/user/amigos');
 
+    print('pra Hel${username}');
     final response = await http.post(
       uri,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       },
-      body: json.encode({'email': email}),
+      body: json.encode({'username': username}),
     );
+
+    print('bakfsa $response.body');
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to fetch friends: ${response.body}');
+    }
+  }
+  Future<List<dynamic>> fetchReviews(String username) async {
+    final uri = _createUri('/user/reviews');
+
+    print('pra Hel${username}');
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({'username': username}),
+    );
+
+    print('bakfsa $response.body');
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch reviews: ${response.body}');
     }
   }
 
