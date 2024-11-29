@@ -247,7 +247,7 @@ class AuthService {
 
   // Método para buscar filmes
   Future<List<dynamic>> fetchFilmes(String token) async {
-    final uri = _createUri('/buscarFilmes');
+    final uri = _createUri('/movies');
 
     final response = await http.get(
       uri,

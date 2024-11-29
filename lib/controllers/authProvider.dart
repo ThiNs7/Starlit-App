@@ -189,7 +189,7 @@ class AuthProvider with ChangeNotifier {
 
     notifyListeners();
   } catch (error) {
-    print('Erro ao buscar filmes: $error');
+    debugPrint('Erro ao buscar filmes: $error');
     rethrow;
   }
 }
