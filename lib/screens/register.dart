@@ -211,56 +211,105 @@ class _CadastroState extends State<Cadastro> {
     return true;
   }
 
-  Future<void> _showProfilePictureDialog() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Foto de Perfil'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: _profileImageUrl != null && _profileImageUrl!.isNotEmpty
-                    ? NetworkImage(_profileImageUrl!)
-                    : AssetImage('assets/default_profile.png') as ImageProvider,
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _avatarController,
-                decoration: const InputDecoration(
-                  labelText: 'URL da Imagem',
-                  prefixIcon: Icon(Icons.link),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _profileImageUrl = value;
-                  });
-                },
-              ),
-            ],
+Future<void> _showProfilePictureDialog() async {
+  await showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: '',
+    transitionDuration: const Duration(milliseconds: 300),
+    pageBuilder: (context, animation, secondaryAnimation) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 1), // Começa fora da tela, na parte inferior
+          end: Offset.zero,         // Termina no centro da tela
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeInOut, // Efeito suave
+        )),
+        child: Dialog(
+          backgroundColor: const Color(0xFF150B2E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _registerUser();
-              },
-              child: const Text('Continuar sem foto'),
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: _profileImageUrl != null && _profileImageUrl!.isNotEmpty
+                      ? NetworkImage(_profileImageUrl!)
+                      : const AssetImage('assets/default_profile.png') as ImageProvider,
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: _avatarController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'URL da Imagem',
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    prefixIcon: const Icon(Icons.link, color: Colors.white),
+                    filled: true,
+                    fillColor: const Color(0xFF5936B2).withOpacity(0.2),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _profileImageUrl = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 24),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _registerUser();
+                  },
+                  child: const Text(
+                    'Continuar sem foto',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xff7E56E4),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 24.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _registerUser();
+                  },
+                  child: const Text(
+                    'Confirmar Foto',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _registerUser();
-              },
-              child: const Text('Confirmar Foto'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
   void _registerUser() async {
     final name = _nameController.text;

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = "https://8f7414e8-3063-4b51-922b-333c93b2d21a-00-3b27394cfoaqp.riker.replit.dev";
+  final String baseUrl = "https://b81a5739-8eb5-4051-9a96-49d4db630202-00-37far6ez31ok5.spock.replit.dev";
 
   Uri _createUri(String path) {
     return Uri.parse('$baseUrl$path');
