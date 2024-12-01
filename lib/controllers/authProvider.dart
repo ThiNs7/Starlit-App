@@ -205,12 +205,12 @@ class AuthProvider with ChangeNotifier {
       // Exibe os filmes recebidos no console
       debugPrint('Filmes recebidos: $_filmes');
 
-      notifyListeners();
-    } catch (error) {
-      print('Erro ao buscar filmes: $error');
-      rethrow;
-    }
+    notifyListeners();
+  } catch (error) {
+    debugPrint('Erro ao buscar filmes: $error');
+    rethrow;
   }
+}
 
   // === Avaliações ===
   Future<void> publishReview(String reviewText, int rating) async {
@@ -275,4 +275,6 @@ class AuthProvider with ChangeNotifier {
       debugPrint('Falha ao carregar credenciais: $err');
     }
   }
+
+  
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = "https://b81a5739-8eb5-4051-9a96-49d4db630202-00-37far6ez31ok5.spock.replit.dev";
+  final String baseUrl = "https://19399893-3b5c-4c90-b07b-6f5647af40d2-00-1ocghnljlefjy.janeway.replit.dev";
 
   Uri _createUri(String path) {
     return Uri.parse('$baseUrl$path');
@@ -272,7 +272,7 @@ class AuthService {
 
   // Método para buscar filmes
   Future<List<dynamic>> fetchFilmes(String token) async {
-    final uri = _createUri('/buscarFilmes');
+    final uri = _createUri('/movies');
 
     final response = await http.get(
       uri,
