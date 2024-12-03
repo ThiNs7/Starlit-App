@@ -1,16 +1,11 @@
-# starlitfilms
+# Starlit App
+![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 
-A new Flutter project.
 
-## Getting Started
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/0e11f3c4-8eac-4442-a202-4094600ca4c2" />
+</div>
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Descrição
+ Versão app da Rede Social Starlit, desenvolvida como parte do Trabalho de Conclusão de Curso dos cursandos de Desenvolvimento de Sistemas no SENAI Nadir Dias de Figueiredo.
