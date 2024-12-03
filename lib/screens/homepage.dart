@@ -146,8 +146,9 @@ Widget _homePageContent() {
         const SizedBox(height: 20),
 
         // Exibir as reviews aqui
-        SizedBox(
-  height: 100, // Altura do container que conterá as reviews
+SizedBox(
+  
+  height: 200, // Altura do container que conterá as reviews
   child: ListView.builder(
     scrollDirection: Axis.horizontal,
     itemCount: authProvider.todasReviews.length,
@@ -158,26 +159,27 @@ Widget _homePageContent() {
       String reviewText = review['descricao'] ?? 'Sem descrição';
       List<String> words = reviewText.split(' ');
       String shortReviewText = words.take(2).join(' '); // Pega as duas primeiras palavras
-
+    
       return GestureDetector(
         onTap: () {
-          // Navega para a nova página com a review completa
+          
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ReviewDetailPage(
                 title: review['tituloFilme'] ?? 'Título Desconhecido',
                 description: reviewText,
+                rating: review['nota']?.toDouble() ?? 0.0,
               ),
             ),
           );
         },
         child: Container(
-          width: 150, // Largura de cada review
+          width: 180, // Largura de cada review
           margin: const EdgeInsets.symmetric(horizontal: 8),
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12), // Padding para dar mais espaço
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: const Color.fromARGB(255, 24, 5, 5).withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -185,21 +187,32 @@ Widget _homePageContent() {
             children: [
               Text(
                 review['tituloFilme'] ?? 'Sem título', // Acesse o título do filme
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white, fontSize: 14),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 5),
-              Text(
-                'Nota: ${review['nota'] ?? 'Sem avaliação'}', // Acesse a nota da review
-                style: const TextStyle(color: Colors.yellow),
+              const SizedBox(height: 5),
+              // Exibe as estrelas de nota
+              Row(
+                children: List.generate(5, (starIndex) {
+                  return Icon(
+                    starIndex < review['nota']?.round() ? Icons.star : Icons.star_border,
+                    color: const Color(0xff9670F5),
+                    size: 20,
+                  );
+                }),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
                 shortReviewText, // Mostra apenas as duas primeiras palavras
                 style: const TextStyle(color: Colors.white),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 80), // Aumenta o espaço entre a review e o autor
+              Text(
+                'Autor: ${review['autorReview'] ?? 'Desconhecido'}', // Acesse o nome do autor corretamente
+                style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),
@@ -208,7 +221,7 @@ Widget _homePageContent() {
     },
   ),
 ),
-          const SizedBox(height: 230),
+          const SizedBox(height: 150),
           const Align(
             alignment: Alignment.topLeft,
             child: Padding(

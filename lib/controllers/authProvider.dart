@@ -14,8 +14,10 @@ class AuthProvider with ChangeNotifier {
   List<dynamic> _amigos = [];
   List<dynamic> _reviews = [];
   List<dynamic> _filmes = [];
+  List<dynamic> _comentarios = []; // Lista para armazenar comentários
   final AuthService _authService = AuthService();
 
+  // Getters
   bool get isAuthenticated => _token != null;
   String? get avatar => _avatar;
   String? get nome => _nome;
@@ -24,12 +26,13 @@ class AuthProvider with ChangeNotifier {
   List<dynamic> get amigos => _amigos;
   List<dynamic> get reviews => _reviews;
   List<dynamic> get filmes => _filmes;
+  List<dynamic> get comentarios => _comentarios; // Getter para comentários
   String get authToken => _token ?? '';
   String? get email => _email;
 
   // === Construtor ===
   AuthProvider() {
-    _loadUserData();
+    _loadUserData;();
   }
 
   // === Autenticação ===
@@ -37,16 +40,40 @@ class AuthProvider with ChangeNotifier {
     try {
       final responseData = await _authService.login(email, password);
       final responseDecoded = jsonDecode(responseData);
-      print('vbokfsg ${responseDecoded['usuario']}');
-      print('bal ${_nome}');
-      print('bal ${_email}');
-      print('bal ${_avatar}');
-      print('bal ${_descricao}');
-      print('bal ${_token}');
       await setAuthToken(responseDecoded['token'].toString());
       return true;
     } catch (error) {
       debugPrint('Erro ao fazer login: $error');
+      rethrow;
+    }
+  }
+
+  // === Comentários ===
+  Future<void> fetchComments(String reviewId) async {
+    if (_token == null) {
+      throw Exception('Usuário não está autenticado!');
+    }
+
+    try {
+      // Aqui você deve implementar a lógica para buscar os comentários da API
+      _comentarios = await _authService.fetchComments(reviewId, _token!);
+      notifyListeners();
+    } catch (error) {
+      debugPrint('Erro ao buscar comentários: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> addComment(String reviewId, String commentText) async {
+    if (_token == null) {
+      throw Exception('Usuário não está autenticado!');
+    }
+
+    try {
+      await _authService.commentReview(reviewId, commentText, _token!);
+      await fetchComments(reviewId); // Atualiza a lista de comentários após adicionar
+    } catch (error) {
+      debugPrint('Erro ao adicionar comentário: $error');
       rethrow;
     }
   }
@@ -64,6 +91,10 @@ Future<void> fetchAllReviews() async {
     rethrow;
   }
 }
+
+  
+
+
 
   Future<void> register(String nome, String username, String email,
       String password, String avatar) async {

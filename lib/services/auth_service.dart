@@ -92,6 +92,7 @@ class AuthService {
       throw Exception('Failed to update user details: ${response.body}');
     }
   }
+  
 
   // Busca a lista de amigos de um usuário
   Future<List<dynamic>> fetchFriends(String username) async {
@@ -237,25 +238,7 @@ class AuthService {
     }
   }
 
-  // Método para comentar uma review
-  Future<void> commentReview(String reviewId, String commentText, String token) async {
-    final url = _createUri('/reviews/$reviewId/comment');
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode({
-        'commentText': commentText,
-      }),
-    );
-
-    if (response.statusCode != 201) {
-      throw Exception('Failed to comment on review: ${response.body}');
-    }
-  }
+  
 
   // Método para buscar filmes
   Future<List<dynamic>> fetchFilmes(String token) async {
@@ -300,4 +283,43 @@ Future<List<dynamic>> fetchAllReviews() async {
     throw Exception('Failed to fetch all reviews: ${response.body}');
   }
 }
+ 
+   Future<List<dynamic>> fetchComments(String reviewId, String token) async {
+    final url = _createUri('/get-comentarios-por-id?id=$reviewId'); // Rota para buscar comentários por ID
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch comments: ${response.body}');
+    }
+  }
+
+  // Método para comentar uma review
+  Future<void> commentReview(String reviewId, String commentText, String token) async {
+    final url = _createUri('/send-comment-review'); // Rota para enviar um comentário
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'reviewId': reviewId,
+        'commentText': commentText,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to comment on review: ${response.body}');
+    }
+  }
 }

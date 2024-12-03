@@ -19,6 +19,8 @@ class _PerfilState extends State<Perfil> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
 
+   List<Map<String, dynamic>> reviewsList = [];
+
   @override
   void initState() {
     
@@ -304,7 +306,7 @@ class _PerfilState extends State<Perfil> with TickerProviderStateMixin {
                             },
                             child: Center(
                               child: Text(
-                                'Favoritos',
+                                'Comentários',
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.05,
                                   fontFamily: 'Poppins',
@@ -352,16 +354,55 @@ class _PerfilState extends State<Perfil> with TickerProviderStateMixin {
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
+                SizedBox(height: screenHeight * 0.02),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: reviewsList.length,
+                  itemBuilder: (context, index) {
+                    final review = reviewsList[index];
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF3A267F), // Cor de fundo para a review
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            review['movieName'],
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Avaliação: ${'★' * review['rating']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
 
   Widget _statColumn(String label, String value) {
     return Column(
@@ -397,106 +438,121 @@ class _PerfilState extends State<Perfil> with TickerProviderStateMixin {
   }
 
   Widget _buildNewPostModal(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+  final screenWidth = MediaQuery.of(context).size.width;
 
-    int starRating = 0; // Controle para a avaliação com estrelas
-    bool isPublic = true; // Controle para visibilidade (Público/Privado)
-    String? selectedMovie; // Para armazenar o filme selecionado
+  int starRating = 0; // Controle para a avaliação com estrelas
+  bool isPublic = true; // Controle para visibilidade (Público/Privado)
+  String? selectedMovie; // Para armazenar o filme selecionado
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+  return Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
       ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Criar Novo Post',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+    ),
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Criar Novo Post',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-          const SizedBox(height: 20),
+        ),
+        const SizedBox(height: 20),
 
-          // Campo para selecionar o nome do filme
-          Consumer<AuthProvider>(
-            builder: (context, auth, child) {
-              // Verifica se há filmes carregados
-              final filmes = auth.filmes;
+        // Campo para selecionar o nome do filme
+        Consumer<AuthProvider>(
+          builder: (context, auth, child) {
+            final filmes = auth.filmes;
 
-              return DropdownButtonFormField<String>(
-                style: const TextStyle(color: Colors.white),
-                dropdownColor: const Color(0xFF3A267F),
-                decoration: InputDecoration(
-                  hintText: 'Selecione o filme',
-                  hintStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: const Color(0xFF3A267F),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
-                  ),
+            return DropdownButtonFormField<String>(
+              style: const TextStyle(color: Colors.white),
+              dropdownColor: const Color(0xFF3A267F),
+              decoration: InputDecoration(
+                hintText: 'Selecione o filme',
+                hintStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: const Color(0xFF3A267F),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none,
                 ),
-                items: filmes.isNotEmpty
-                    ? filmes
-                        .map<DropdownMenuItem<String>>(
-                            (filme) => DropdownMenuItem<String>(
-                                  // Usando o campo 'nome' conforme sua API
-                                  value: filme['nome'],
-                                  child: Text(
-                                    filme['nome'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ))
-                        .toList()
-                    : [
-                        const DropdownMenuItem(
-                          value: null,
+              ),
+              items: filmes.isNotEmpty
+                  ? filmes
+                      .map<DropdownMenuItem<String>>(
+                        (filme) => DropdownMenuItem<String>(
+                          value: filme['nome'],
                           child: Text(
-                            'Nenhum filme disponível',
-                            style: TextStyle(color: Colors.white),
+                            filme['nome'],
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
-                      ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedMovie = value;
-                  });
-                },
-              );
-            },
-          ),
-          const SizedBox(height: 20),
+                      )
+                      .toList()
+                  : [
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text(
+                          'Nenhum filme disponível',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+              onChanged: (value) {
+                setState(() {
+                  selectedMovie = value;
+                });
+              },
+            );
+          },
+        ),
+        const SizedBox(height: 20),
 
-          // Campo para escrever o post
-          TextFormField(
-            maxLines: 3,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Escreva algo...',
-              hintStyle: const TextStyle(color: Colors.white70),
-              filled: true,
-              fillColor: const Color(0xFF3A267F),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide.none,
-              ),
+        // Campo para escrever o post
+        TextFormField(
+          maxLines: 3,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'Escreva algo...',
+            hintStyle: const TextStyle(color: Colors.white70),
+            filled: true,
+            fillColor: const Color(0xFF3A267F),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide.none,
             ),
           ),
-          const SizedBox(height: 20),
+        ),
+        const SizedBox(height: 20),
 
-          // Avaliação com estrelas e visibilidade
-          Row(
+        // Avaliação com estrelas e visibilidade
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(
+                isPublic ? Icons.visibility : Icons.visibility_off,
+                color: isPublic ? Colors.white : Colors.grey,
+                size: 30,
+              ),
+              onPressed: () {
+                setState(() {
+                  isPublic = !isPublic;
+                });
+              },
+            ),
+            const SizedBox(width: 10),
+            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
@@ -519,13 +575,13 @@ class _PerfilState extends State<Perfil> with TickerProviderStateMixin {
                     icon: Icon(
                       Icons.star,
                       color: index < starRating
-                          ? const Color(0xff7E56E4)
-                          : Colors.grey,
+                          ? const Color(0xff7E56E4) // Cor da estrela selecionada
+                          : Colors.grey, // Cor da estrela não selecionada
                       size: 30,
                     ),
                     onPressed: () {
                       setState(() {
-                        starRating = index + 1;
+                        starRating = index + 1; // Atualiza a nota com base na estrela selecionada
                       });
                     },
                   );
@@ -536,41 +592,50 @@ class _PerfilState extends State<Perfil> with TickerProviderStateMixin {
           const SizedBox(height: 20),
 
           ElevatedButton(
-            onPressed: () {
-              if (selectedMovie != null) {
-                // Lógica para salvar o post aqui
-                print("Visibilidade: ${isPublic ? 'Público' : 'Privado'}");
-                print("Nota: $starRating estrelas");
-                print("Filme: $selectedMovie");
-                Navigator.pop(context);
-              } else {
-                // Exibir uma mensagem de erro se nenhum filme for selecionado
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Por favor, selecione um filme.')),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff7E56E4),
-              minimumSize: Size(double.infinity, screenHeight * 0.07),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+                onPressed: () {
+                  if (selectedMovie != null) {
+                    // Adicionar a nova review ao AuthProvider
+                    Provider.of<AuthProvider>(context, listen: false).addReview(selectedMovie!, starRating);
+                    
+                    // Atualizar a lista local de reviews se necessário
+                    setState(() {
+                      reviewsList.add({
+                        'movieName': selectedMovie,
+                        'rating': starRating,
+                      });
+                    });
+                    Navigator.pop(context);
+                  } else {
+                    // Exibir uma mensagem de erro se nenhum filme for selecionado
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Por favor, selecione um filme.'),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff7E56E4),
+                  minimumSize: Size(double.infinity, screenHeight * 0.07),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 10,
+                ),
+                child: const Text(
+                  'Publicar',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              elevation: 10,
-            ),
-            child: const Text(
-              'Publicar',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+      ]
       ),
-    );
-  }
+  ]
+  )
+  );
+}
 }
