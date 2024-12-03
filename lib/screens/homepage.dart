@@ -9,6 +9,7 @@ import 'package:starlitfilms/components/review_form.dart';
 import 'package:starlitfilms/controllers/authProvider.dart';
 import 'package:starlitfilms/screens/Perfil/perfil.dart';
 import 'package:starlitfilms/screens/amigos.dart';
+import 'package:starlitfilms/screens/review.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -40,7 +41,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = NotchBottomBarController(); // Initialize without initialIndex
+    _controller = NotchBottomBarController(); 
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AuthProvider>(context, listen: false).fetchAllReviews();
+    });
   }
 
   void _onItemTapped(int index) {
@@ -62,81 +66,148 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _homePageContent() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+Widget _homePageContent() {
+  final authProvider = Provider.of<AuthProvider>(context);
+
+  return Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      child: Column(
-        children: [
-          const SizedBox(height: 60),
-          const Text(
-            'StarlitFilms',
-            style: TextStyle(
-              fontFamily: "Poppins",
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w300,
-              letterSpacing: 1,
-            ),
+    ),
+    child: Column(
+      children: [
+        const SizedBox(height: 60),
+        const Text(
+          'StarlitFilms',
+          style: TextStyle(
+            fontFamily: "Poppins",
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w300,
+            letterSpacing: 1,
           ),
-          const SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 383,
-                  height: 42,
-                  child: TextField(
-                    style: const TextStyle(
+        ),
+        const SizedBox(height: 30),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 383,
+                height: 42,
+                child: TextField(
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xFF35286D).withOpacity(0.5),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: Icon(Icons.search, color: Colors.white),
+                    ),
+                    hintText: 'Choose a Movie',
+                    hintStyle: const TextStyle(
                       color: Colors.white,
+                      fontFamily: "Poppins",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
                     ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color(0xFF35286D).withOpacity(0.5),
-                      prefixIcon: const Padding(
-                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                        child: Icon(Icons.search, color: Colors.white),
-                      ),
-                      hintText: 'Choose a Movie',
-                      hintStyle: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Poppins",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
                     ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 50),
-          const Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: Text(
-                'Destaques',
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                ),
+        ),
+        const SizedBox(height: 50),
+        const Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: EdgeInsets.only(left: 30),
+            child: Text(
+              'Destaques',
+              style: TextStyle(
+                fontFamily: "Poppins",
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ),
+        ),
+        const SizedBox(height: 20),
+
+        // Exibir as reviews aqui
+        SizedBox(
+  height: 100, // Altura do container que conterá as reviews
+  child: ListView.builder(
+    scrollDirection: Axis.horizontal,
+    itemCount: authProvider.todasReviews.length,
+    itemBuilder: (context, index) {
+      final review = authProvider.todasReviews[index]; // Acessa a review
+
+      // Extrai as duas primeiras palavras
+      String reviewText = review['descricao'] ?? 'Sem descrição';
+      List<String> words = reviewText.split(' ');
+      String shortReviewText = words.take(2).join(' '); // Pega as duas primeiras palavras
+
+      return GestureDetector(
+        onTap: () {
+          // Navega para a nova página com a review completa
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReviewDetailPage(
+                title: review['tituloFilme'] ?? 'Título Desconhecido',
+                description: reviewText,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          width: 150, // Largura de cada review
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                review['tituloFilme'] ?? 'Sem título', // Acesse o título do filme
+                style: const TextStyle(color: Colors.white),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 5),
+              Text(
+                'Nota: ${review['nota'] ?? 'Sem avaliação'}', // Acesse a nota da review
+                style: const TextStyle(color: Colors.yellow),
+              ),
+              SizedBox(height: 5),
+              Text(
+                shortReviewText, // Mostra apenas as duas primeiras palavras
+                style: const TextStyle(color: Colors.white),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  ),
+),
           const SizedBox(height: 230),
           const Align(
             alignment: Alignment.topLeft,

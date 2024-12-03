@@ -38,7 +38,6 @@ class AuthProvider with ChangeNotifier {
       final responseData = await _authService.login(email, password);
       final responseDecoded = jsonDecode(responseData);
       print('vbokfsg ${responseDecoded['usuario']}');
-      await fetchUserDetails(responseDecoded['usuario']);
       print('bal ${_nome}');
       print('bal ${_email}');
       print('bal ${_avatar}');
@@ -51,6 +50,20 @@ class AuthProvider with ChangeNotifier {
       rethrow;
     }
   }
+  List<dynamic> _todasReviews = [];
+
+List<dynamic> get todasReviews => _todasReviews;
+
+Future<void> fetchAllReviews() async {
+  try {
+    _todasReviews = await _authService.fetchAllReviews(); // Atribua diretamente
+    debugPrint('Reviews recebidas: $_todasReviews'); // Imprime a lista de reviews
+    notifyListeners();
+  } catch (error) {
+    debugPrint('Erro ao buscar todas as reviews: $error');
+    rethrow;
+  }
+}
 
   Future<void> register(String nome, String username, String email,
       String password, String avatar) async {
@@ -82,21 +95,7 @@ class AuthProvider with ChangeNotifier {
     prefs.clear();
   }
 
-  // === Perfil ===
-  Future<void> fetchUserDetails(String username) async {
-    try {
-      final userDetails = await _authService.fetchUserDetails(username);
-      await fetchFriends(username);
-      _nome = userDetails['name'];
-      _username = userDetails['username'];
-      _avatar = userDetails['avatar'];
-      _descricao = userDetails['description'];
-      notifyListeners();
-    } catch (error) {
-      debugPrint('Erro ao buscar detalhes do usuário: $error');
-      rethrow;
-    }
-  }
+
 
   void updateAvatar(String newAvatarUrl) {
     _avatar = newAvatarUrl;
@@ -139,7 +138,7 @@ class AuthProvider with ChangeNotifier {
           _nome ?? '',
           _username ?? '',
           _avatar ?? '',
-          _descricao ?? '',
+          _descricao ?? ''
         );
         await saveProfileChanges();
       } catch (error) {
@@ -193,18 +192,15 @@ class AuthProvider with ChangeNotifier {
   }
 
   // === Filmes ===
-  Future<void> fetchFilmes() async {
-    if (_token == null) {
-      throw Exception('Usuário não está autenticado!');
-    }
+Future<void> fetchFilmes() async {
+  if (_token == null) {
+    throw Exception('Usuário não está autenticado!');
+  }
 
-    try {
-      // Realiza a requisição para buscar os filmes
-      _filmes = await _authService.fetchFilmes(_token!);
-
-      // Exibe os filmes recebidos no console
-      debugPrint('Filmes recebidos: $_filmes');
-
+  try {
+    // Realiza a requisição para buscar os filmes
+    _filmes = await _authService.fetchFilmes(_token!);
+    debugPrint('Filmes recebidos: $_filmes');
     notifyListeners();
   } catch (error) {
     debugPrint('Erro ao buscar filmes: $error');
@@ -213,23 +209,24 @@ class AuthProvider with ChangeNotifier {
 }
 
   // === Avaliações ===
-  Future<void> publishReview(String reviewText, int rating) async {
-    if (_token == null) {
-      throw Exception('Usuário não está autenticado!');
-    }
-
-    try {
-      await _authService.publishReview(
-        _email!,
-        reviewText,
-        rating,
-        _token!,
-      );
-    } catch (error) {
-      debugPrint('Erro ao publicar a avaliação: $error');
-      rethrow;
-    }
+Future<void> publishReview(String reviewText, int rating) async {
+  if (_token == null) {
+    throw Exception('Usuário não está autenticado!');
   }
+
+  try {
+    await _authService.publishReview(
+      _email!,
+      reviewText,
+      rating,
+      _token!,
+    );
+    await fetchAllReviews(); // Atualiza a lista de todas as reviews
+  } catch (error) {
+    debugPrint('Erro ao publicar a avaliação: $error');
+    rethrow;
+  }
+}
 
   // === Armazenamento local ===
   Future<void> _loadUserData() async {
@@ -275,6 +272,19 @@ class AuthProvider with ChangeNotifier {
       debugPrint('Falha ao carregar credenciais: $err');
     }
   }
+  Future<void> addReview(String movieName, int rating) async {
+  if (_token == null) {
+    throw Exception('Usuário não está autenticado!');
+  }
 
-  
+  try {
+    // Aqui você pode adicionar lógica para enviar a review ao seu banco de dados
+    await _authService.publishReview(_email!, movieName, rating, _token!);
+    // Atualiza a lista de todas as reviews
+    await fetchAllReviews();
+  } catch (error) {
+    debugPrint('Erro ao publicar a avaliação: $error');
+    rethrow;
+  }
+}
 }

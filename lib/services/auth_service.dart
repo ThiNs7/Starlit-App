@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = "https://19399893-3b5c-4c90-b07b-6f5647af40d2-00-1ocghnljlefjy.janeway.replit.dev";
+  final String baseUrl = "https://085f9066-c8dd-482c-9586-8323a28d1a04-00-12tnm9gw2ncin.picard.replit.dev";
 
   Uri _createUri(String path) {
     return Uri.parse('$baseUrl$path');
@@ -66,21 +66,8 @@ class AuthService {
     }
   }
 
-  // Busca os detalhes do usuário com base no email
-  Future<Map<String, dynamic>> fetchUserDetails(String username) async {
-    final url = _createUri("/user/detalhes-usuario");
 
-    print('pra te dmonari ${username}');
-    final response = await http.post(url, headers: {'Content-Type': 'application/json'}, body: json.encode({
-      'username': username 
-    }));
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to fetch user details: ${response.body}');
-    }
-  }
+  
 
   
   Future<void> updateUserDetails(String email, String nome, String avatar, String descricao, String username) async {
@@ -288,4 +275,29 @@ class AuthService {
       throw Exception('Failed to fetch filmes: ${response.body}');
     }
   }
+
+  // Método para buscar todas as reviews
+// Método para buscar todas as reviews
+Future<List<dynamic>> fetchAllReviews() async {
+  final uri = _createUri('/reviews'); // Supondo que você tenha uma rota para isso
+
+  final response = await http.get(
+    uri,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    // Verifique se a resposta contém a estrutura esperada
+    if (data is List) {
+      return data; // Retorna a lista de reviews
+    } else {
+      throw Exception('Formato de resposta inesperado: ${response.body}');
+    }
+  } else {
+    throw Exception('Failed to fetch all reviews: ${response.body}');
+  }
+}
 }
