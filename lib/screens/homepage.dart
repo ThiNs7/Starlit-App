@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _controller = NotchBottomBarController(); 
-     WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<AuthProvider>(context, listen: false).fetchAllReviews();
     });
   }
@@ -66,178 +66,188 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-Widget _homePageContent() {
-  final authProvider = Provider.of<AuthProvider>(context);
+  Widget _homePageContent() {
+    final authProvider = Provider.of<AuthProvider>(context);
 
-  return Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF2A1266), Color(0xFF150B2E)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
-    ),
-    child: Column(
-      children: [
-        const SizedBox(height: 60),
-        const Text(
-          'StarlitFilms',
-          style: TextStyle(
-            fontFamily: "Poppins",
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w300,
-            letterSpacing: 1,
-          ),
-        ),
-        const SizedBox(height: 30),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 383,
-                height: 42,
-                child: TextField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xFF35286D).withOpacity(0.5),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                      child: Icon(Icons.search, color: Colors.white),
-                    ),
-                    hintText: 'Choose a Movie',
-                    hintStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: "Poppins",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 50),
-        const Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: EdgeInsets.only(left: 30),
-            child: Text(
-              'Destaques',
+      child: SingleChildScrollView( // Permite rolagem
+        child: Column(
+          children: [
+            const SizedBox(height: 60),
+            const Text(
+              'StarlitFilms',
               style: TextStyle(
                 fontFamily: "Poppins",
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: FontWeight.w300,
+                letterSpacing: 1,
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: 20),
-
-        // Exibir as reviews aqui
-SizedBox(
-  
-  height: 200, // Altura do container que conterá as reviews
-  child: ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: authProvider.todasReviews.length,
-    itemBuilder: (context, index) {
-      final review = authProvider.todasReviews[index]; // Acessa a review
-
-      // Extrai as duas primeiras palavras
-      String reviewText = review['descricao'] ?? 'Sem descrição';
-      List<String> words = reviewText.split(' ');
-      String shortReviewText = words.take(2).join(' '); // Pega as duas primeiras palavras
-    
-      return GestureDetector(
-        onTap: () {
-          
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReviewDetailPage(
-                title: review['tituloFilme'] ?? 'Título Desconhecido',
-                description: reviewText,
-                rating: review['nota']?.toDouble() ?? 0.0,
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 383,
+                    height: 42,
+                    child: TextField(
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color(0xFF35286D).withOpacity(0.5),
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                          child: Icon(Icons.search, color: Colors.white),
+                        ),
+                        hintText: 'Choose a Movie',
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Poppins",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-        child: Container(
-          width: 180, // Largura de cada review
-          margin: const EdgeInsets.symmetric(horizontal: 8),
-          padding: const EdgeInsets.all(12), // Padding para dar mais espaço
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 24, 5, 5).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                review['tituloFilme'] ?? 'Sem título', // Acesse o título do filme
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 5),
-              // Exibe as estrelas de nota
-              Row(
-                children: List.generate(5, (starIndex) {
-                  return Icon(
-                    starIndex < review['nota']?.round() ? Icons.star : Icons.star_border,
-                    color: const Color(0xff9670F5),
-                    size: 20,
-                  );
-                }),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                shortReviewText, // Mostra apenas as duas primeiras palavras
-                style: const TextStyle(color: Colors.white),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 80), // Aumenta o espaço entre a review e o autor
-              Text(
-                'Autor: ${review['autorReview'] ?? 'Desconhecido'}', // Acesse o nome do autor corretamente
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  ),
-),
-          const SizedBox(height: 150),
-          const Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: Text(
-                'Posts Amigos',
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
+            const SizedBox(height: 50),
+
+            // Título "Destaques"
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 30),
+                child : Text(
+                  'Destaques',
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+
+            // Exibir as reviews em formato de grade
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0), 
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(), 
+                shrinkWrap: true, 
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, 
+                  childAspectRatio: 0.7, 
+                  crossAxisSpacing: 10, 
+                  mainAxisSpacing: 10, 
+                ),
+                itemCount: authProvider.todasReviews.length,
+                itemBuilder: (context, index) {
+                  final review = authProvider.todasReviews[index]; 
+
+                  // Extrai as informações necessárias
+                  String reviewText = review['descricao'] ?? 'Sem descrição';
+                  List<String> words = reviewText.split(' ');
+                  String shortReviewText = words.take(5).join(' '); 
+                  String bannerFilme = review['bannerFilme'] ?? ''; 
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReviewDetailPage(
+                            title: review['tituloFilme'] ?? 'Título Desconhecido',
+                            description: reviewText,
+                            rating: review['nota']?.toDouble() ?? 0.0,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: DecorationImage(
+                          image: NetworkImage(bannerFilme), 
+                          fit: BoxFit.cover, 
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5), 
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3), 
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          color: Colors.black.withOpacity(0.7), // Fundo escuro cobrindo todo o banner
+                          child: Padding(
+                            padding: const EdgeInsets.all(12), 
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  review['tituloFilme'] ?? 'Sem título', 
+                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: List.generate(5, (starIndex) {
+                                    return Icon(
+                                      starIndex < review['nota']?.round() ? Icons.star : Icons.star_border,
+                                      color: const Color(0xff9670F5),
+                                      size: 20,
+                                    );
+                                  }),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  shortReviewText, 
+                                  style: const TextStyle(color: Colors.white),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 150),
+                                Text(
+                                  'Autor: ${review['autorReview'] ?? 'Desconhecido'}', 
+                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,7 +258,7 @@ SizedBox(
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: _selectedIndex == 1 // Condicional para ocultar a AppBar na página Perfil
+      appBar: _selectedIndex == 1 
           ? null
           : AppBar(
               automaticallyImplyLeading: false,
